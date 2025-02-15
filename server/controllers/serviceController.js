@@ -110,3 +110,31 @@ export const getServicesByUser = asyncHandler(async (req, res) => {
         });
     }
 })
+
+export const searchServices = asyncHandler(async (req, res) => {
+    try{
+        const { tags, title} = req.query;
+
+        let query = {};
+
+        if (tags){
+            query.tags = { $in: tags.split(",") };
+        }
+
+        if (title) {
+            query.title = { $regex: title, $options: "i" };
+        }
+
+        const services = await Service.find(query).populate(
+            "provider",
+            "name profilePicture",
+        )
+
+        return res.status(200).json(services);
+    } catch ( error ){
+        console.log("Error in searchServices: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+})
