@@ -42,7 +42,7 @@ const serviceSchema = new mongoose.Schema({
 
     applicants: [{ 
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
-        status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" }
+        status: { type: String, enum: ["pending", "accepted", "rejected", "completed"], default: "pending" }
     }],
 
     ratings: [{ 

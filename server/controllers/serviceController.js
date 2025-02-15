@@ -111,6 +111,7 @@ export const getServicesByUser = asyncHandler(async (req, res) => {
     }
 })
 
+//saerch services
 export const searchServices = asyncHandler(async (req, res) => {
     try{
         const { tags, title} = req.query;
@@ -133,6 +134,50 @@ export const searchServices = asyncHandler(async (req, res) => {
         return res.status(200).json(services);
     } catch ( error ){
         console.log("Error in searchServices: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+})
+
+//apply for services
+export const applyService = asyncHandler(async (req, res) =>{
+    try {
+        const service = await Service.findById(req.params.id);
+
+        if(!service){
+            return res.status(404).json({
+                message: "Service not found",
+            });
+        }
+
+        const user = await User.findOne({ auth0Id: req.oidc.user.sub });
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        // Check if user has already applied and is still pending or accepted
+        const existingApplication = service.applicants.find(applicant =>
+            applicant.user.equals(user._id) && 
+            (applicant.status === "pending" || applicant.status === "accepted")
+        );
+
+        if (existingApplication) {
+            return res.status(400).json({
+                message: "You have already applied for this service.",
+            });
+        }
+
+        // Add user to applicants list with "pending" status
+        service.applicants.push({ user: user._id, status: "pending" });
+
+        await service.save();
+        return res.status(200).json(service);
+    } catch ( error ){
+        console.log("Error in applyService: ", error);
         return res.status(500).json({
             message: "Internal Server Error",
         });
