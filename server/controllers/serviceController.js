@@ -84,3 +84,29 @@ export const getServices = asyncHandler(async (req, res) => {
         });
     }
 })
+
+//get services by user
+export const getServicesByUser = asyncHandler(async (req, res) => {
+    try{
+
+        const user = await User.findById(req.params.id);
+
+        if(!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        const services = await Service.find({ provider: user._id }).populate(
+            "provider",
+            "name profilePicture",
+        )
+
+        return res.status(200).json(services);
+    } catch (error) {
+        console.log("Error in getServiceByUser: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+})
