@@ -68,3 +68,19 @@ export const createService = asyncHandler(async (req, res) => {
         });
     }
 })
+
+export const getServices = asyncHandler(async (req, res) => {
+    try{
+        const services = await Service.find({}).populate(
+            "provider",
+            "name email profilePicture",
+        ).sort({ createdAt: -1}); //sort by latest date
+
+        return res.status(200).json(services);
+    }catch (error) {
+        console.log("Error in getServices: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+})
