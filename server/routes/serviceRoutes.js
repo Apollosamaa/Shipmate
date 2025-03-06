@@ -1,5 +1,5 @@
 import express from "express";
-import { createService, getServices, getServicesByUser, searchServices, applyService, saveService } from "../controllers/serviceController.js";
+import { createService, getServices, getServicesByUser, searchServices, applyService, saveService, getServiceById } from "../controllers/serviceController.js";
 import protect from "../middleware/protect.js";
 
 const router = express.Router();
@@ -16,4 +16,7 @@ router.put("/services/apply/:id", protect, applyService);
 
 //save services and unsave
 router.put("/services/save/:id", protect, saveService)
+
+//get service by id 
+router.get("/services/:id", protect, getServiceById);
 export default router;

@@ -184,6 +184,7 @@ export const applyService = asyncHandler(async (req, res) =>{
     }
 })
 
+//like and unlike services
 export const saveService = asyncHandler(async (req, res) => {
     try{
         const service = await Service.findById(req.params.id);
@@ -219,4 +220,29 @@ export const saveService = asyncHandler(async (req, res) => {
             message: "Internal Server Error",
         });
     }
+})
+
+//get service by id 
+export const getServiceById = asyncHandler(async (req, res) => {
+    try{
+        const {id} = req.params;
+
+        const service = await Service.findById(id).populate(
+            "provider",
+            "name email profilePicture",
+        );
+
+        if (!service) {
+            return res.status(404).json({
+                message: "Service not found",
+            });
+        }
+
+        return res.status(200).json(service);
+    } catch(error) {
+        console.log("Error in getServiceById: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }    
 })
