@@ -246,3 +246,40 @@ export const getServiceById = asyncHandler(async (req, res) => {
         });
     }    
 })
+
+//delete service
+export const deleteService = asyncHandler(async (req, res) => {
+    try{
+        const {id} = req.params;
+
+        const service = await Service.findById(id);
+        const user = await User.findOne({ auth0Id: req.oidc.user.sub });
+
+        if(!service) {
+            return res.status(404).json({
+                message: "Service not found",
+            });
+        }
+
+        if(!user) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
+
+        await service.deleteOne(
+            {
+                _id: id,
+            }
+        )
+    
+        return res.status(200).json({
+            message: "Service deleted successfully",
+        });
+    } catch (error) {
+        console.log("Error in deleteService: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+})
