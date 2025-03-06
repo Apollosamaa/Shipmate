@@ -183,3 +183,40 @@ export const applyService = asyncHandler(async (req, res) =>{
         });
     }
 })
+
+export const saveService = asyncHandler(async (req, res) => {
+    try{
+        const service = await Service.findById(req.params.id);
+
+        if (!service){
+            return res.status(404).json({
+                message: "Service not found",
+            });
+        }
+
+        const user = await User.findOne({ auth0Id: req.oidc.user.sub });
+
+        if(!user){
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        const isSaved = service.likes.includes(user._id);
+
+        if(isSaved){
+            service.likes = service.likes.filter((like) => !like.equals(user._id));
+        }else{
+            service.likes.push(user._id);
+        }
+
+        await service.save();
+
+        return res.status(200).json(service);
+    }catch(error){
+        console.log("Error in saveService: ", error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+})

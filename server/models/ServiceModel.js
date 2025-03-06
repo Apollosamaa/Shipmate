@@ -45,6 +45,11 @@ const serviceSchema = new mongoose.Schema({
         status: { type: String, enum: ["pending", "accepted", "rejected", "completed"], default: "pending" }
     }],
 
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User", 
+    }],
+
     ratings: [{ 
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
         rating: { type: Number, min: 1, max: 5 }, 
