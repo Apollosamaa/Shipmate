@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import { GlobalContextProvider } from "@/context/globalContext"
+import { ServicesContextProvider } from "@/context/servicesContext"
 
 interface Props {
     children: React.ReactNode;
@@ -8,9 +9,9 @@ interface Props {
 
 function ContextProvider({children}: Props) {
   return (
-    <GlobalContextProvider>
+    <GlobalContextProvider><ServicesContextProvider>
       {children}
-    </GlobalContextProvider>
+    </ServicesContextProvider></GlobalContextProvider>
   )
 }
 
