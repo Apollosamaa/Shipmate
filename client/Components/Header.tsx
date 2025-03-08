@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { useGlobalContext } from '@/context/globalContext'
-import { LogIn } from 'lucide-react'
+import { LogIn, UserPlus } from 'lucide-react'
 
 function Header() {
     const {isAuthenticated, user} = useGlobalContext();
@@ -55,9 +55,15 @@ function Header() {
             <div className="flex item-center gap-6">
                 <Link 
                     href={"http://localhost:8000/login"}
-                    className="py-2 px-6 border border-[#7263F3] text-[#7263F3] hover:bg-[#7263F3]/10 transition-all duration-200 ease-in-out"
+                    className="py-2 px-6 rounded-md flex items-center gap-4 text-white bg-[#7263F3] border-[#7263F3] hover:bg-[#7263F3]/90 transition-all duration-200 ease-in-out"
                 >
                     <LogIn className="w-4 h-4"/> Login
+                </Link>
+                <Link 
+                    href={"http://localhost:8000/login"}
+                    className="py-2 px-6 rounded-md flex items-center gap-4 border-[#7263F3] text-[#7263F3] hover:bg-[#7263F3]/10 transition-all duration-200 ease-in-out"
+                >
+                    <UserPlus className="w-4 h-4"/> Register
                 </Link>
             </div>)}
       </div>
