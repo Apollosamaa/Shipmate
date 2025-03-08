@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useGlobalContext } from "./globalContext";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const ServicesContext = createContext();
 
@@ -26,7 +27,22 @@ export const ServicesContextProvider = ({children}) => {
         }
     };
 
-    
+    const createService = async (serviceData) =>{
+        try {
+            const res = await axios.post("/api/v1/services", serviceData);
+
+            toast.success("Service created successfully");
+
+            setServices((prevServices) => [res.data, ...prevServices]);
+
+            //update userServices
+            if(userProfile._id){
+                setUserServices((prevUserServices) => [res.data, ...prevUserServices]);
+            }
+        } catch (error) {
+            console.log("Error creating service", error);
+        }
+    }
 
     useEffect(() => {
         getServices();
