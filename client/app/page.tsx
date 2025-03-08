@@ -7,6 +7,7 @@ import { Input } from "@/Components/ui/input";
 import { useGlobalContext } from "@/context/globalContext";
 import { CheckCircleIcon, PlusCircle, Search, SearchIcon, Users } from "lucide-react";
 import Link from "next/link";
+import Footer from "@/Components/Footer";
 
 export default function Home() {
 
@@ -138,6 +139,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <Footer/>
     </main>
   );
 }
