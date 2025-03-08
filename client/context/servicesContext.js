@@ -102,7 +102,32 @@ export const ServicesContextProvider = ({children}) => {
         } finally {
             setLoading(false);
         }
-    }
+    };
+
+    // apply to a service
+    const applyToService = async (serviceId) => {
+        try {
+            const res = axios.put(`/api/v1/services/apply/${serviceId}`);
+            toast.success("Application submitted successfully");
+            getServices();
+        } catch (error) {
+            console.log("Error applying to services", error);
+            toast.error(error.response.data.message);
+        }
+    };
+
+    // delete a service
+    const deleteService = async (serviceId) => {
+        try {
+            await axios.delete(`/api/v1/services/${serviceId}`);
+            setServices((prevServices)=> prevServices.filter((service) => service._id !== serviceId))
+            searchServices((prevServices)=> prevServices.filter((service) => service._id !== serviceId))
+
+            toast.success("Service deleted Successfully");
+        } catch (error) {
+            console.log("Error deleting service", error);
+        }
+    };
 
     useEffect(() => {
         getServices();
@@ -116,7 +141,17 @@ export const ServicesContextProvider = ({children}) => {
 
 
     return (
-        <ServicesContext.Provider value={"hello from services context"}>
+        <ServicesContext.Provider value={{
+            services,
+            loading,
+            createService,
+            userServices,
+            searchServices,
+            getServiceById,
+            saveService,
+            applyToService,
+            deleteService,
+        }}>
             { children }
         </ServicesContext.Provider>
     )
