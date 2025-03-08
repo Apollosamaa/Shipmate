@@ -42,12 +42,31 @@ export const ServicesContextProvider = ({children}) => {
         } catch (error) {
             console.log("Error creating service", error);
         }
+    };
+
+    const getUserServices = async (user) => {
+        setLoading(true);
+        try {
+            const res = await axios.get("/api/v1/services/user/" + user);
+            setUserServices(res.data);
+        } catch (error) {
+            console.log("Error getting user services", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
         getServices();
     }, []);
 
+    useEffect(() =>{
+        if(userProfile._id){
+            getUserServices(userProfile._id);
+        }
+    }, [userProfile]);
+
+    console.log("User services", userServices)
 
     return (
         <ServicesContext.Provider value={"hello from services context"}>
