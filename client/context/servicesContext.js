@@ -54,6 +54,54 @@ export const ServicesContextProvider = ({children}) => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const searchServices = async (tags, title) => {
+        setLoading(true);
+        try {
+            //build query string
+            const query = new URLSearchParams(); 
+
+            if(tags) query.append("tags", tags);
+            if(title) query.append("title", title);
+
+            // send request
+            const res = await axios.get(`/api/v1/services/search?${query.toString()}`);
+
+            //set services to response data
+            setServices(res.data);
+        } catch (error) {
+            console.log("Error getting services", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // get service by id
+    const getServiceById = async (id) => {
+        setLoading(true);
+        try {
+            const res = await axios.get(`/api/v1/services/${id}`);
+            return res.data;
+        } catch (error) {
+            console.log("Error getting service by id", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // save or like a service
+    const saveService = async (serviceId, userId) => {
+        setLoading(true);
+        try {
+            const res = await axios.put(`/api/v1/services/save/${serviceId}`);
+            toast.success("Service saved successfully")
+            getServices();
+        } catch (error) {
+            console.log("Error saving service", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -66,7 +114,6 @@ export const ServicesContextProvider = ({children}) => {
         }
     }, [userProfile]);
 
-    console.log("User services", userServices)
 
     return (
         <ServicesContext.Provider value={"hello from services context"}>
