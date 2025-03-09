@@ -20,27 +20,27 @@ function Header() {
         <li>
             <Link 
                 href="/findservice" 
-                className={`py-2 px-6 ${
-                    pathname === 'findservice' 
-                        ? "text-[#7263F3] border-[#7263F3] bg-[#7263F3]/10"
+                className={`py-2 px-6 rounded-md ${
+                    pathname === '/findservice' 
+                        ? "text-[#7263F3] border-[#7263F3] border bg-[#7263F3]/10"
                         : ""
                     }`}>
                     Find Service 
             </Link>
             <Link 
                 href="/myservices" 
-                className={`py-2 px-6 ${
-                    pathname === 'myservices' 
-                        ? "text-[#7263F3] border-[#7263F3] bg-[#7263F3]/10"
+                className={`py-2 px-6 rounded-md ${
+                    pathname === '/myservices' 
+                        ? "text-[#7263F3] border-[#7263F3] border bg-[#7263F3]/10"
                         : ""
                     }`}>
                     My Services
             </Link>
             <Link 
                 href="/post" 
-                className={`py-2 px-6 ${
-                    pathname === 'post' 
-                        ? "text-[#7263F3] border-[#7263F3] bg-[#7263F3]/10"
+                className={`py-2 px-6 rounded-md ${
+                    pathname === '/post' 
+                        ? "text-[#7263F3] border-[#7263F3] border bg-[#7263F3]/10"
                         : ""
                     }`}>
                     Post a Services 
