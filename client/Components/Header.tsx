@@ -5,6 +5,9 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import { useGlobalContext } from '@/context/globalContext'
 import { LogIn, UserPlus } from 'lucide-react'
+import Profile from './Profile'
+
+  
 
 function Header() {
     const {isAuthenticated, user} = useGlobalContext();
@@ -50,7 +53,7 @@ function Header() {
 
       <div className="flex items-center gap-4">
         {isAuthenticated ? (
-            <div>Profile</div>
+            <Profile />
         ) : (
             <div className="flex item-center gap-6">
                 <Link 
