@@ -71,7 +71,11 @@ function ServiceForm() {
 
                 <div className="flex justify-end gap-4 mt-4">
                     {currentSection !== "Summary" && 
-                    (<button type="button" className="px-6 py-2 bg-[#7263f3] text-white rounded-md">Next </button>)}
+                    (<button type="button" className="px-6 py-2 bg-[#7263f3] text-white rounded-md"
+                    onClick={() =>{
+                        const currentIndex = sections.indexOf(currentSection);
+                        setCurrentSection(sections[currentIndex +1]);
+                    }}>Next </button>)}
                 </div>
 
                 {currentSection === "Summary" && 
