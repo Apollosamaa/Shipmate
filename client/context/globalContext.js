@@ -15,6 +15,15 @@ export const GlobalContextProvider = ({children}) => {
     const [userProfile, setUserProfile] = useState({});
     const [loading, setLoading] = useState(false)
 
+    //input state
+    const [serviceTitle, setServiceTitle] = useState("");
+    const [serviceDescription, setServiceDescription] = useState("");
+    const [activeServiceCategory, setActiveServiceCategory] = useState([]);
+    const [price, setPrice] = useState(0);
+    const [negotiable, setNegotiable] = useState(false);
+    const [tags, setTags] = useState([]);
+
+
     useEffect(() => {
         const checkAuth = async () => {
             setLoading(true);
@@ -43,6 +52,19 @@ export const GlobalContextProvider = ({children}) => {
         }
     }
 
+    //handle input change
+    const handleTitleChange = (e) => {
+        setServiceTitle(e.target.value.trimStart());
+    };
+
+    const handleDescriptionChange= (e) => {
+        setServiceDescription(e.target.value.trimStart());
+    }
+
+    const handlePriceChange = (e) => {
+        setPrice(e.target.value);
+    }
+
     useEffect(()=> {
         if(isAuthenticated && auth0User) {
             getUserProfile(auth0User.sub);
@@ -56,6 +78,15 @@ export const GlobalContextProvider = ({children}) => {
             userProfile,
             loading,
             getUserProfile,
+            serviceTitle,
+            serviceDescription,
+            activeServiceCategory,
+            price,
+            negotiable,
+            tags,
+            handleTitleChange,
+            handleDescriptionChange,
+            handlePriceChange,
         }}>
             { children }
         </GlobalContext.Provider>
