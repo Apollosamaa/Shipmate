@@ -66,7 +66,7 @@ function ServiceForm() {
                 ))}
             </div>
 
-            <form action="" className="p-6 bg-white rounded-lg self-start">
+            <form action="" className="p-6 flex-1 bg-white rounded-lg self-start">
                 {renderStages()}
 
                 <div className="flex justify-end gap-4 mt-4">

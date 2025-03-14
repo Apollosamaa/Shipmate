@@ -15,10 +15,10 @@ const serviceSchema = new mongoose.Schema({
         required: true 
     }, // Detailed explanation of service
 
-    category: { 
+    category: [{ 
         type: String, 
         required: true 
-    }, // Service type (e.g., "Academic", "Tech Support")
+    }], // Service type (e.g., "Academic", "Tech Support")
 
     tags: [{ 
         type: String 
