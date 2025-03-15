@@ -57,8 +57,8 @@ export const GlobalContextProvider = ({children}) => {
         setServiceTitle(e.target.value.trimStart());
     };
 
-    const handleDescriptionChange= (e) => {
-        setServiceDescription(e.target.value.trimStart());
+    const handleDescriptionChange= (value) => {
+        setServiceDescription(value.trimStart());
     }
 
     const handlePriceChange = (e) => {

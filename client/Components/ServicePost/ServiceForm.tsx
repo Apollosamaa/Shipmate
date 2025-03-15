@@ -35,7 +35,7 @@ function ServiceForm() {
     const getCompletedColor = (section: string) => {
         switch (section) {
             case "About":
-                return serviceTitle && activeServiceCategory.length > 0 ? "bg-[#7263f3] text-white" : "bg-gray-300";
+                return serviceTitle && activeServiceCategory.length > 0 && tags.length > 0 ? "bg-[#7263f3] text-white" : "bg-gray-300";
             case "Service Details":
                 return serviceDescription && price > 0 ? "bg-[#7263f3] text-white" : "bg-gray-300";
             default:
@@ -79,7 +79,7 @@ function ServiceForm() {
                 </div>
 
                 {currentSection === "Summary" && 
-                (<button type="submit" className="px-6 py-2 bg-[#7263f3] text-white rounded-md">Post Service</button>)}
+                (<button type="submit" className="self-end px-6 py-2 bg-[#7263f3] text-white rounded-md">Post Service</button>)}
             </form>
         </div>
     )

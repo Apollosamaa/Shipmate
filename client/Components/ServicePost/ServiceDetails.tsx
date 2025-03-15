@@ -16,11 +16,12 @@ function MyEditor() {
   const {
     setServiceDescription,
     serviceDescription,
+    handleDescriptionChange,
   } = useGlobalContext()
 
   return (<ReactQuill 
   value={serviceDescription}
-  onChange={setServiceDescription}
+  onChange={handleDescriptionChange}
   style={{
     minHeight: "400px",
     maxHeight: "900px",
