@@ -5,6 +5,8 @@ import React, { useEffect } from 'react'
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
+import { Button } from '../ui/button';
+import { X } from 'lucide-react';
 
 interface ServiceCategoryProps {
   "Academic Assistance": string;
@@ -22,6 +24,8 @@ function ServiceTitle() {
     serviceTitle,
     activeServiceCategory,
     setActiveServiceCategory,
+    tags,
+    setTags,
   } = useGlobalContext()
 
   const [serviceCategories, setServiceCategories] = React.useState<ServiceCategoryProps>({
@@ -36,6 +40,19 @@ function ServiceTitle() {
 
   const handleServiceCategoryChange = (category: keyof ServiceCategoryProps) => {
     setServiceCategories((prev)=> ({...prev, [category]: !prev[category]}));
+  }
+
+  const [newTag, setNewTag] = React.useState("");
+
+  const handleAddTag = () => {
+    if(newTag.trim() && !tags.includes(newTag.trim())){
+      setTags((prev: string)=> [...prev, newTag.trim()]);
+      setNewTag("");
+    }
+  }
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag:string) => tag !== tagToRemove));
   }
 
   useEffect(() => {
@@ -92,6 +109,50 @@ function ServiceTitle() {
               </Label>
             </div>
           ))}
+        </div>
+      </div>
+
+      <Separator/>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex-1">
+          <h3 className="tex-lg font-semibold">Tags</h3>
+          <Label htmlFor="serviceTags" className="text-sm text-muted-foreground mt-2">
+            Tags help categorize your service, making it easier for others to find it.
+          </Label>
+        </div>
+        <div className="flex-1 flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Input 
+              type="text"
+              id="tags"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              className="flex-1"
+              placeholder="Enter a tag"
+            />
+
+            <Button 
+              type="button"
+              onClick={handleAddTag}
+            >
+              Add Tag
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map((tag: string, index: number) => (
+              <div key={index} className="bg-primary text-primary-foreground px-2 py-1 rounded-full flex items-center space-x-1">
+                <span>{tag}</span>
+                <button 
+                  type="button"
+                  onClick={() => handleRemoveTag(tag)}
+                  className="text-primary-foreground hover:text-red-300 focus:outline-none"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

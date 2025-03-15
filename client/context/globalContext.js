@@ -89,6 +89,7 @@ export const GlobalContextProvider = ({children}) => {
             handlePriceChange,
             setActiveServiceCategory,
             setNegotiable,
+            setTags,
         }}>
             { children }
         </GlobalContext.Provider>
