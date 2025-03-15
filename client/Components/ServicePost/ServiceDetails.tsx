@@ -13,21 +13,10 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 
 function MyEditor() {
-  console.log("Rendering editor...")
   const {
     setServiceDescription,
     serviceDescription,
   } = useGlobalContext()
-
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],  // Header options
-      ["bold", "italic", "underline"],  // Text formatting
-      [{ list: "ordered" }, { list: "bullet" }],  // Lists
-      ["link"],  // Link option
-    ],
-  };
-  
 
   return (<ReactQuill 
   value={serviceDescription}
@@ -36,7 +25,7 @@ function MyEditor() {
     minHeight: "400px",
     maxHeight: "900px",
   }}
-  modules={modules}
+  modules={{toolbar: true}}
   className="custom-quill-editor"
   />);
 }
@@ -66,7 +55,7 @@ function ServiceDetails() {
             Price
           </h3>
           <Label htmlFor="price" className="text-gray-500 mt-2">
-            Enter the price for the service. 
+            Enter the price for the service. If the price is varies, please specify details in descriptions above. Such as whether it is a starting price or if additional costs may apply.
           </Label>
         </div>
 
@@ -93,6 +82,8 @@ function ServiceDetails() {
                 Hide Price
               </Label>
             </div>
+
+            
           </div>
         </div>
 
