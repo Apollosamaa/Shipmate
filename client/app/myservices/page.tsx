@@ -1,4 +1,5 @@
 "use client"
+import Footer from '@/Components/Footer';
 import Header from '@/Components/Header'
 import MyService from '@/Components/ServiceItem/MyService';
 import { useGlobalContext } from '@/context/globalContext';
@@ -66,9 +67,13 @@ function page() {
         <div className="my-8 grid grid-cols-2 gap-6">
           {activeTab === "posts" &&
             userServices.map((service: Service) => (<MyService key={service._id} service={service}/>))}
+
+          {activeTab === "request" &&
+            requestServices.map((service: Service) => (<MyService key={service._id} service={service}/>))}
         </div>
 
       </div>
+      <Footer />
     </div>
   )
 }

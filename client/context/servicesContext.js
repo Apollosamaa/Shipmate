@@ -121,7 +121,7 @@ export const ServicesContextProvider = ({children}) => {
         try {
             await axios.delete(`/api/v1/services/${serviceId}`);
             setServices((prevServices)=> prevServices.filter((service) => service._id !== serviceId))
-            searchServices((prevServices)=> prevServices.filter((service) => service._id !== serviceId))
+            setUserServices((prevServices)=> prevServices.filter((service) => service._id !== serviceId))
 
             toast.success("Service deleted Successfully");
         } catch (error) {
