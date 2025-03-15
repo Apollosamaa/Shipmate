@@ -3,6 +3,7 @@ import { useGlobalContext } from '@/context/globalContext';
 import React from 'react'
 import ServiceTitle from './ServiceTitle';
 import ServiceDetails from './ServiceDetails';
+import { useServicesContext } from '@/context/servicesContext';
 
 function ServiceForm() {
 
@@ -14,6 +15,10 @@ function ServiceForm() {
         negotiable,
         tags
     } = useGlobalContext();
+
+    const {
+        createService
+    } = useServicesContext();
 
     const sections = ["About", "Service Details", "Summary"];
     const [currentSection, setCurrentSection] = React.useState(sections[0]);
@@ -43,6 +48,18 @@ function ServiceForm() {
         }
     }
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        createService({
+            title: serviceTitle,
+            description: serviceDescription,
+            category: activeServiceCategory,
+            price,
+            negotiable,
+            tags,
+        })
+    }
+
     return (
         <div className="w-full flex gap-6">
             <div className="self-start w-[10rem] bg-white rounded-md shadow-sm overflow-hidden">
@@ -66,7 +83,7 @@ function ServiceForm() {
                 ))}
             </div>
 
-            <form action="" className="p-6 flex-1 bg-white rounded-lg self-start">
+            <form action="" className="p-6 flex-1 bg-white rounded-lg self-start" onSubmit={handleSubmit}>
                 {renderStages()}
 
                 <div className="flex justify-end gap-4 mt-4">
