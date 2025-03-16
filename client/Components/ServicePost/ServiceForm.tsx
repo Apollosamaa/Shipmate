@@ -93,10 +93,10 @@ function ServiceForm() {
                         const currentIndex = sections.indexOf(currentSection);
                         setCurrentSection(sections[currentIndex +1]);
                     }}>Next </button>)}
+                
+                    {currentSection === "Summary" && 
+                    (<button type="submit" className="self-end px-6 py-2 bg-[#7263f3] text-white rounded-md">Post Service</button>)}
                 </div>
-
-                {currentSection === "Summary" && 
-                (<button type="submit" className="self-end px-6 py-2 bg-[#7263f3] text-white rounded-md">Post Service</button>)}
             </form>
         </div>
     )
