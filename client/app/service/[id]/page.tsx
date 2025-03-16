@@ -8,21 +8,30 @@ import { formatDates } from '@/utils/formatDates';
 import formatMoney from '@/utils/formatMoney';
 import { Bookmark } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
+import toast from 'react-hot-toast';
 
 function page() {
 
-  const {services, saveService} = useServicesContext();
-  const { userProfile } = useGlobalContext();
+  const {services, saveService, applyToService} = useServicesContext();
+  const { userProfile, isAuthenticated } = useGlobalContext();
   const params = useParams();
+  const router = useRouter()
   const { id } = params;
 
   const [isSaved, setIsSaved] = React.useState(false);
+  const [isApplied, setIsApplied] = React.useState(false);
 
   const service = services.find((service: Service) => service._id === id);
   const otherServices = services.filter((service: Service) => service._id !== id);
 
+  useEffect(() => {
+    if (service) {
+      setIsApplied(service.applicants.some((applicant: { user: string }) => applicant.user === userProfile._id));
+    }
+  }, [service, userProfile._id]);  
+  
   useEffect(() => {
     if(service){
       setIsSaved(service.likes.includes(userProfile._id))
@@ -113,7 +122,21 @@ function page() {
         </div>
 
         <div className="w-[26%] flex flex-col gap-8">
-
+          <button className={`text-white py-4 rounded-full hover:text-white ${isApplied ? "bg-green-500 hover:bg-green-500" : "bg-[#7263f3] hover:bg-[#7263f3]/90"}`}
+            onClick={()=> {
+              if(isAuthenticated){
+                if(!isApplied) {
+                  applyToService(service._id)
+                  setIsApplied(true)
+                } else{
+                  toast.error("You have already applied to this service")
+                }
+              } else {
+                router.push("http://localhost:8000/login")
+              }
+            }}>
+            {isApplied ? "Applied" : "Apply Now"}
+          </button>
         </div>
       </div>
     </div>
