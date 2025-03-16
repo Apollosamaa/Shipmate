@@ -72,18 +72,11 @@ function ServiceDetails() {
 
           <div className="flex gap-2 mt-2 justify-between">
             <div className="flex items-center space-x-2 border border-gray-300 rounded-md p-2">
-              <Checkbox id="negotiable" />
+              <Checkbox id="negotiable" checked={negotiable} onCheckedChange={setNegotiable}/>
               <Label htmlFor="negotiable" className="text-gray-500">
                 Negotiable
               </Label>
             </div>
-            <div className="flex items-center space-x-2 border border-gray-300 rounded-md p-2">
-              <Checkbox id="hidePrice" />
-              <Label htmlFor="hidePrice" className="text-gray-500">
-                Hide Price
-              </Label>
-            </div>
-
             
           </div>
         </div>

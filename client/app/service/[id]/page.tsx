@@ -1,4 +1,5 @@
 "use client"
+import Footer from '@/Components/Footer';
 import Header from '@/Components/Header'
 import ServiceCard from '@/Components/ServiceItem/ServiceCard'
 import { useGlobalContext } from '@/context/globalContext';
@@ -11,6 +12,7 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 import toast from 'react-hot-toast';
+import { bookmark, bookmarkEmpty } from "@/utils/Icons"
 
 function page() {
 
@@ -59,7 +61,7 @@ function page() {
   };
 
   return (
-    <div>
+    <main>
       <Header />
       
       <div className="p-8 mb-8 mx-auto w-[90%] rounded-md flex gap-8">
@@ -89,7 +91,7 @@ function page() {
 
               <button className={`text-2xl ${
                 isSaved ? "text-[#7263f3]" : "text-gray-400"}`} onClick={()=> handleSave(service._id)}>
-                {isSaved? <Bookmark size={24}/> : <Bookmark size={24}/>}
+                {isSaved? bookmark : bookmarkEmpty}
               </button>
             </div>
             <h1 className="text-2xl font-semibold">{title}</h1>
@@ -115,7 +117,7 @@ function page() {
               </p>
             </div>
 
-            <h2 className="font-bold text-2xl mt-2">Service Decsription</h2>
+            <h2 className="font-bold text-2xl mt-2">Service Description</h2>
           </div>
 
           <div className="wysiwyg mt-2" dangerouslySetInnerHTML={{__html: description}}></div>
@@ -171,7 +173,9 @@ function page() {
           </div>
         </div>
       </div>
-    </div>
+
+      <Footer />
+    </main>
   )
 }
 

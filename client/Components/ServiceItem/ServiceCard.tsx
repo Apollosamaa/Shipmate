@@ -4,10 +4,11 @@ import { Service } from '@/types/types';
 import { Bookmark, Calendar } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Separator } from '../ui/separator';
 import formatMoney from '@/utils/formatMoney';
 import { formatDates } from '@/utils/formatDates';
+import { bookmark, bookmarkEmpty } from '@/utils/Icons'
 
 interface ServiceProps {
     service: Service;
@@ -37,6 +38,10 @@ function ServiceCard({ service, activeService}: ServiceProps) {
         setIsSaved((prev) =>!prev);
         saveService(id);
     }
+
+    useEffect(()=> {
+        setIsSaved(service.likes.includes(userProfile._id))
+    }, [service.likes, userProfile._id])
 
     const shortDescription = "Lorem ipsum dolor sit amet, consectetur adipis. Curabitur velit vit arcu.";
 
@@ -89,7 +94,7 @@ function ServiceCard({ service, activeService}: ServiceProps) {
                     }`} onClick={() => {
                         isAuthenticated ? handleSave(service._id) : router.push("http://localhost:8000/login")
                     }}>
-                    {isSaved ? <Bookmark size={24}/> : <Bookmark size={24}/>}
+                    {isSaved ? bookmark : bookmarkEmpty}
                 </button>
             </div>
 

@@ -108,7 +108,7 @@ export const ServicesContextProvider = ({children}) => {
     // apply to a service
     const applyToService = async (serviceId) => {
         try {
-            const res = axios.put(`/api/v1/services/apply/${serviceId}`);
+            const res = await axios.put(`/api/v1/services/apply/${serviceId}`);
             toast.success("Application submitted successfully");
             getServices();
         } catch (error) {
