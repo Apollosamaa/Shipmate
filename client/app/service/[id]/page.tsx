@@ -137,6 +137,38 @@ function page() {
             }}>
             {isApplied ? "Applied" : "Apply Now"}
           </button>
+
+          <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
+            <h3 className="text-lg font-semibold">Other Information</h3>
+            <div className="flex flex-col gap-2">
+              <p>
+                <span  className="font-bold">Posted:</span> {formatDates(createdAt)}
+              </p>
+
+              <p>
+                <span className="font-bold">Price negotiable: </span>
+                <span className={` ${
+                negotiable? "text-green-400" : "text-red-400"}`}>{negotiable ? "Yes" : "No" }</span>
+              </p>
+
+              <p>
+                <span className="font-bold">Category:</span> {category[0]}
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
+            <h3 className="text-lg font-semibold">Tags</h3>
+            <p>Other relevant tags for the service provided.</p>
+
+            <div className="flex flex-wrap gap-4">
+              {service.tags.map((tag: string, index: number) => (
+                <span key={index} className="px-4 py-1 rounded-full text-sm font-medium flex items-center bg-indigo-500/20 text-[#7263f3]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
