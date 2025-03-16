@@ -95,7 +95,8 @@ export const ServicesContextProvider = ({children}) => {
         setLoading(true);
         try {
             const res = await axios.put(`/api/v1/services/save/${serviceId}`);
-            toast.success("Service saved successfully")
+            const isNowSaved = res.data.likes.includes(userProfile?._id);
+            toast.success(isNowSaved ? "Service saved successfully" : "Service unsaved");
             getServices();
         } catch (error) {
             console.log("Error saving service", error);
