@@ -15,6 +15,11 @@ export const ServicesContextProvider = ({children}) => {
     const [loading, setLoading] = useState(false);
     const [userServices, setUserServices] = useState([]);
 
+    const [searchQuery, setSearchQuery] = useState({
+        tags: "",
+        title: "",
+    })
+
     const getServices = async () => {
         setLoading(true);
         try {
@@ -130,6 +135,11 @@ export const ServicesContextProvider = ({children}) => {
         }
     };
 
+    // handle search changes
+    const handleSearchChange = (searchName, value) => {
+        setSearchQuery((prev) => ({ ...prev, [searchName]: value}))
+    }
+
     useEffect(() => {
         getServices();
     }, []);
@@ -152,6 +162,8 @@ export const ServicesContextProvider = ({children}) => {
             saveService,
             applyToService,
             deleteService,
+            handleSearchChange,
+            searchQuery,
         }}>
             { children }
         </ServicesContext.Provider>
