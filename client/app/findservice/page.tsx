@@ -3,10 +3,25 @@ import Header from '@/Components/Header'
 import SearchForm from '@/Components/SearchForm';
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
+import { grip, list, table } from '@/utils/Icons';
 import Image from 'next/image';
 import React from 'react'
 
 function page() {
+
+  const [columns, setColumns] = React.useState(3);
+
+  //cycle 1,2,3
+  const toggleGridColumns = () => {
+    setColumns((prev)=>(prev === 3 ? 2: prev === 2 ? 1 :3))
+  }
+
+  const getIcon = () => {
+    if(columns === 3 ) return grip;
+    if(columns === 2 ) return table;
+    return list;
+  }
+
   const { saveService, services, applyService } = useServicesContext();
   const { userProfile, isAuthenticated } = useGlobalContext();
   
@@ -79,7 +94,15 @@ function page() {
         
       </div>
 
-      
+      <div className="w-[90%] mx-auto mb-14">
+      <h2 className="text-3xl font-bold text-black py-8">Recent Services</h2>
+
+      <button onClick={toggleGridColumns}>
+        <span>
+          {columns === 3 ? "Grid View" : columns === 2 ? "Table View" : "List View"}
+        </span>
+      </button>
+      </div>
     </div>
   )
 }
