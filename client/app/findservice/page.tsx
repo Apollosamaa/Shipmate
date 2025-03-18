@@ -1,8 +1,10 @@
 "use client"
 import Header from '@/Components/Header'
 import SearchForm from '@/Components/SearchForm';
+import ServiceCard from '@/Components/ServiceItem/ServiceCard';
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
+import { Service } from '@/types/types';
 import { grip, list, table } from '@/utils/Icons';
 import Image from 'next/image';
 import React from 'react'
@@ -95,13 +97,37 @@ function page() {
       </div>
 
       <div className="w-[90%] mx-auto mb-14">
-      <h2 className="text-3xl font-bold text-black py-8">Recent Services</h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-3xl font-bold text-black py-8">Recent Services</h2>
 
-      <button onClick={toggleGridColumns}>
-        <span>
-          {columns === 3 ? "Grid View" : columns === 2 ? "Table View" : "List View"}
-        </span>
-      </button>
+          <button 
+            onClick={toggleGridColumns}
+            className="flex items-center gap-4 border border-gray-400 px-8 py-2 rounded-full font-medium"  
+          >
+            <span>
+              {columns === 3 ? "Grid View" : columns === 2 ? "Table View" : "List View"}
+            </span>
+            <span className="text-lg">{getIcon()}</span>
+          </button>
+        </div>
+
+        <div className="flex gap-8">
+          <h1>Filters Goes Here</h1>
+
+          <div>
+            {services.length > 0 ? (
+              <div className={`self-start flex-1 grid gap-8 ${columns === 3 ? "grid-cols-3": columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+                {services.map((service: Service) => (
+                  
+                  <ServiceCard key={service._id} service={service} />
+                ))}
+              </div>
+                
+              ) : (
+                <div className="mt-1 flex items-center"><p className="text-2xl text-gray-400 font-bold">No Services Found!</p></div>
+              )}
+          </div>
+        </div>
       </div>
     </div>
   )
