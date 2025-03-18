@@ -20,6 +20,20 @@ export const ServicesContextProvider = ({children}) => {
         title: "",
     })
 
+    //filters
+    const [filters, setFilters] = useState({
+        academicAssistance: false,
+        technicalIT: false,
+        creativeMedia: false,
+        eventEntertainment: false,
+        healthWellness: false,
+        transportationDelivery: false,
+        miscellaneous: false,
+    })
+
+    const [minPrice, setMinPrice] = useState(10);
+    const [maxPrice, setMaxPrice] = useState(100);
+
     const getServices = async () => {
         setLoading(true);
         try {
@@ -138,7 +152,12 @@ export const ServicesContextProvider = ({children}) => {
     // handle search changes
     const handleSearchChange = (searchName, value) => {
         setSearchQuery((prev) => ({ ...prev, [searchName]: value}))
-    }
+    };
+
+    // handle filter changes
+    const handleFilterChange = (filterName) => {
+        setFilters((prev)=> ({...prev, [filterName]: !prev[filterName]}))
+    };
 
     useEffect(() => {
         getServices();
@@ -164,6 +183,14 @@ export const ServicesContextProvider = ({children}) => {
             deleteService,
             handleSearchChange,
             searchQuery,
+            setSearchQuery,
+            filters,
+            setFilters,
+            minPrice,
+            setMinPrice,
+            maxPrice,
+            setMaxPrice,
+            handleFilterChange,
         }}>
             { children }
         </ServicesContext.Provider>

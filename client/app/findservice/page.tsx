@@ -2,6 +2,7 @@
 import Header from '@/Components/Header'
 import SearchForm from '@/Components/SearchForm';
 import ServiceCard from '@/Components/ServiceItem/ServiceCard';
+import Filters from '@/Components/Filters';
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
 import { Service } from '@/types/types';
@@ -24,9 +25,34 @@ function page() {
     return list;
   }
 
-  const { saveService, services, applyService } = useServicesContext();
+  const { saveService, services, applyService, filters } = useServicesContext();
   const { userProfile, isAuthenticated } = useGlobalContext();
   
+  const filteredServices = 
+    filters.academicAssistance ||  
+    filters.technicalIT ||
+    filters.creativeMedia ||
+    filters.eventEntertainment ||
+    filters.healthWellness ||
+    filters.transportationWellness ||
+    filters.miscellaneous ?
+    services.filter((service:Service) => {
+      if(filters.academicAssistance && service.category.includes("Academic Assistance"))
+        return true;
+      if(filters.technicalIT && service.category.includes("Technical & IT"))
+        return true;
+      if(filters.creativeMedia && service.category.includes("Creative & Media"))
+        return true;
+      if(filters.eventEntertainment && service.category.includes("Event & Entertainment"))
+        return true;
+      if(filters.healthWellness && service.category.includes("Health & Wellness"))
+        return true;
+      if(filters.transportationWellness && service.category.includes("Transportation & Delivery"))
+        return true;
+      if(filters.miscellaneous && service.category.includes("Miscellaneous"))
+        return true;
+    })
+    : services;
 
   return (
     <div>
@@ -112,16 +138,14 @@ function page() {
         </div>
 
         <div className="flex gap-8">
-          <h1>Filters Goes Here</h1>
+          <Filters />
 
-          <div>
+          <div className={`self-start flex-1 grid gap-8 ${columns === 3 ? "grid-cols-3": columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
             {services.length > 0 ? (
-              <div className={`self-start flex-1 grid gap-8 ${columns === 3 ? "grid-cols-3": columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
-                {services.map((service: Service) => (
+                filteredServices.map((service: Service) => (
                   
                   <ServiceCard key={service._id} service={service} />
-                ))}
-              </div>
+                ))
                 
               ) : (
                 <div className="mt-1 flex items-center"><p className="text-2xl text-gray-400 font-bold">No Services Found!</p></div>
