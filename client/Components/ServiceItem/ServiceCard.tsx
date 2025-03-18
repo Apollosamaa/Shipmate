@@ -77,7 +77,7 @@ function ServiceCard({ service, activeService}: ServiceProps) {
             <div className="flex justify-between">
                 <div className="group flex gap-1 items-center cursor-pointer" onClick={()=> router.push(`/service/${service._id}`)}>
                     <div className="w-12 h-12 bg-gray-200 rounded-md flex items-center justify-center">
-                        <Image src={profilePicture || "/avatar.png"} alt={name} width={40} height={40} className="rounded-md"/>
+                        <Image src={profilePicture || "/avatar.png"} alt={name || "name"} width={40} height={40} className="rounded-md"/>
                     </div>
 
                     <div className="flex flex-col gap-1">

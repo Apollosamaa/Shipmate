@@ -10,10 +10,6 @@ function Filters() {
     handleFilterChange,
     filters,
     setFilters,
-    minPrice,
-    maxPrice,
-    setMinPrice,
-    setMaxPrice,
     setSearchQuery,
    } = useServicesContext();
 
@@ -108,7 +104,10 @@ function Filters() {
         </div>
         
       </div>
+
+      
     </div>
+    
   )
 }
 

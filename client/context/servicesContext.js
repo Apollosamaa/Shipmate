@@ -31,9 +31,6 @@ export const ServicesContextProvider = ({children}) => {
         miscellaneous: false,
     })
 
-    const [minPrice, setMinPrice] = useState(10);
-    const [maxPrice, setMaxPrice] = useState(100);
-
     const getServices = async () => {
         setLoading(true);
         try {
@@ -186,10 +183,6 @@ export const ServicesContextProvider = ({children}) => {
             setSearchQuery,
             filters,
             setFilters,
-            minPrice,
-            setMinPrice,
-            maxPrice,
-            setMaxPrice,
             handleFilterChange,
         }}>
             { children }
