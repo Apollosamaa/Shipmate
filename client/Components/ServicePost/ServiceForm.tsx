@@ -6,6 +6,7 @@ import ServiceDetails from './ServiceDetails';
 import { useServicesContext } from '@/context/servicesContext';
 import { Checkbox } from '@/Components/ui/checkbox';
 import { useRouter } from 'next/navigation';
+import formatMoney from '@/utils/formatMoney';
 
 function ServiceForm() {
     const {
@@ -43,10 +44,13 @@ function ServiceForm() {
                         <h2 className="text-2xl font-bold mb-4">Final Step: Review & Post</h2>
                         <p><strong>Service Title:</strong> {serviceTitle}</p>
                         <p><strong>Description:</strong></p><div className="wysiwyg mt-2" dangerouslySetInnerHTML={{ __html: serviceDescription }}></div>
-                        <p><strong>Price:</strong> MYR {price} {negotiable ? "(Negotiable)" : "(Fixed)"}</p>
+                        <p><strong>Price:</strong> {formatMoney( price, "MYR")} {negotiable ? "(Negotiable)" : "(Fixed)"}</p>
                         <div className="flex items-center mt-4">
                         <Checkbox checked={agreeToTnC} onCheckedChange={(checked) => setAgreeToTnC(checked === true)} />
-                            <span className="ml-2 text-gray-700">I agree to the Terms & Conditions</span>
+                        <span className="ml-2 text-gray-700">
+                            I agree to the 
+                            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Terms & Conditions</a>
+                        </span>
                         </div>
                     </div>
                 );
