@@ -1,8 +1,21 @@
+"use client"
 import Header from '@/Components/Header'
 import ServiceForm from '@/Components/ServicePost/ServiceForm'
-import React from 'react'
+import { useGlobalContext } from '@/context/globalContext'
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react'
 
 function page() {
+
+  const { isAuthenticated, loading } = useGlobalContext();
+  const router = useRouter();
+
+  useEffect(()=>{
+    if(!loading && !isAuthenticated) {
+      router.push("http://localhost:8000/login")
+    }
+  }, [isAuthenticated])
+
   return (
     <div className="flex flex-col">
       <Header/>

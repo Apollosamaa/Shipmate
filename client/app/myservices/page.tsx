@@ -6,7 +6,7 @@ import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
 import { Service } from '@/types/types';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function page() {
   const { userServices, services } = useServicesContext();
@@ -16,6 +16,12 @@ function page() {
 
   const userId = userProfile?.id;
   const router = useRouter();
+
+  useEffect(()=> {
+    if(!loading && !isAuthenticated) {
+      router.push("http://localhost:8000/login")
+    }
+  }, [isAuthenticated])
 
   const requestServices = services.filter((service: Service) => {
     return service.applicants.includes(userId);
