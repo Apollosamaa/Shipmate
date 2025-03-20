@@ -1,3 +1,9 @@
+interface Applicant {
+    user: string;
+    status: string;
+    _id: string;
+}
+
 interface Service {
     _id: string;
     title: string;
@@ -6,7 +12,7 @@ interface Service {
     negotiable: boolean;
     tags: string[];
     category: string[];
-    applicants: string[];
+    applicants: Applicant[];
     likes: string[];
     ratings: string[];
     provider: {

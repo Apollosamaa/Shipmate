@@ -2,6 +2,7 @@
 import Footer from '@/Components/Footer';
 import Header from '@/Components/Header'
 import MyService from '@/Components/ServiceItem/MyService';
+import MyServiceViewOnly from '@/Components/ServiceItem/MyServiceViewOnly';
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
 import { Service } from '@/types/types';
@@ -14,7 +15,9 @@ function page() {
 
   const [activeTab, setActiveTab] = React.useState("posts")
 
-  const userId = userProfile?.id;
+  const userId = userProfile?._id || userProfile?.sub;
+console.log("User ID:", userId);
+
   const router = useRouter();
 
   useEffect(()=> {
@@ -23,9 +26,21 @@ function page() {
     }
   }, [isAuthenticated])
 
-  const requestServices = services.filter((service: Service) => {
-    return service.applicants.includes(userId);
-  })
+  console.log("All Services:", services);
+
+  services.forEach((service: Service) => {
+    console.log(`Checking Service: ${service.title}`, service.applicants);
+  });
+
+  const requestServices = services.filter((service: Service) => 
+    service.applicants.some((applicant: any) => {
+      console.log("Applicant:", applicant);
+      return applicant?.user === userId;
+    })
+  );
+
+  console.log("Filtered Requested Services:", requestServices);
+
 
   if(loading){
     return null;
@@ -75,7 +90,7 @@ function page() {
             userServices.map((service: Service) => (<MyService key={service._id} service={service}/>))}
 
           {activeTab === "request" &&
-            requestServices.map((service: Service) => (<MyService key={service._id} service={service}/>))}
+            requestServices.map((service: Service) => (<MyServiceViewOnly key={service._id} service={service}/>))}
         </div>
 
       </div>
