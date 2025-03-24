@@ -2,6 +2,7 @@
 import Footer from '@/Components/Footer';
 import Header from '@/Components/Header'
 import MyService from '@/Components/ServiceItem/MyService';
+import MyServiceSavedView from '@/Components/ServiceItem/MyServiceSavedView';
 import MyServiceViewOnly from '@/Components/ServiceItem/MyServiceViewOnly';
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
@@ -16,7 +17,7 @@ function page() {
   const [activeTab, setActiveTab] = React.useState("posts")
 
   const userId = userProfile?._id || userProfile?.sub;
-console.log("User ID:", userId);
+  console.log("User ID:", userId);
 
   const router = useRouter();
 
@@ -39,6 +40,11 @@ console.log("User ID:", userId);
     })
   );
 
+  const savedServices = services.filter((service: Service) =>
+    service.likes.includes(userId)
+  );
+  
+
   console.log("Filtered Requested Services:", requestServices);
 
 
@@ -47,10 +53,10 @@ console.log("User ID:", userId);
   }
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header/>
 
-      <div className="mt-8 w-[90%] mx-auto flex flex-col">
+      <div className="flex-1 mt-8 w-[90%] mx-auto flex flex-col">
         <div className="self-center flex items-center gap-6">
           <button className={`border border-gray-400 px-8 py-2 rounded-full font-medium
             ${
@@ -69,6 +75,14 @@ console.log("User ID:", userId);
             onClick={()=> setActiveTab("request")}
           >
             Requested Services
+          </button>
+          <button
+            className={`border border-gray-400 px-8 py-2 rounded-full font-medium ${
+              activeTab === "saved" ? "border-transparent bg-[#7263f3] text-white" : "border-gray-400"
+            }`}
+            onClick={() => setActiveTab("saved")}
+          >
+            Saved Services
           </button>
         </div>
         
@@ -91,6 +105,9 @@ console.log("User ID:", userId);
 
           {activeTab === "request" &&
             requestServices.map((service: Service) => (<MyServiceViewOnly key={service._id} service={service}/>))}
+
+          {activeTab === "saved" &&
+              savedServices.map((service: Service) => <MyServiceSavedView key={service._id} service={service} />)}
         </div>
 
       </div>

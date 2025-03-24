@@ -1,3 +1,4 @@
+
 "use client"
 import React from 'react'
 import { Service } from "@/types/types"
@@ -7,8 +8,8 @@ import { CardTitle } from '../ui/card';
 import { formatDates } from '@/utils/formatDates';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { Pencil, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useGlobalContext } from '@/context/globalContext';
 
 interface ServiceProps {
     service: Service;
@@ -16,10 +17,17 @@ interface ServiceProps {
 
 function MyService({ service }: ServiceProps) {
     const { deleteService } = useServicesContext();
-
-    const { applicants, provider } = service;
-
     const router = useRouter();
+
+    const { userProfile } = useGlobalContext();
+
+    // Find the current user's application status
+    const userApplication = service.applicants.find((applicant) => 
+        typeof applicant === "object" && "user" in applicant && applicant.user === userProfile._id
+    );
+    const applicationStatus = userApplication?.status || "Unknown";
+
+
 
     return (
         <div className="p-8 bg-white rounded-xl flex flex-col gap-5">
@@ -28,10 +36,7 @@ function MyService({ service }: ServiceProps) {
 
                 <div>
                     <CardTitle className="text-xl font-bold truncate">{service.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                        {service.provider.name}: {applicants.length}{" "}
-                        {applicants.length > 1 ? "Applicants" : "Applicants"}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{service.provider.name}</p>
                 </div>
             </div>
             <div>
@@ -46,17 +51,6 @@ function MyService({ service }: ServiceProps) {
                                 </Badge>
                             )}
                         </div>
-                    </div>
-                    <div className="self-end">
-                        <Button variant="ghost" size="icon" className="text-gray-500">
-                            <Pencil size={14}/>
-                            <span className="sr-only">Edit Service</span>
-                        </Button>
-
-                        <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-300" onClick={()=> deleteService(service._id)}>
-                            <Trash size={14} />
-                            <span className="sr-only">Delete Service</span>
-                        </Button>
                     </div>
                 </div>
             </div>
