@@ -284,22 +284,36 @@ export const deleteService = asyncHandler(async (req, res) => {
     }
 })
 
-// Get applicants for a specific service
-export const getServiceApplicants = asyncHandler(async (req, res) => {
+export const getMyApplicants = asyncHandler(async (req, res) => {
     try {
-        const service = await Service.findById(req.params.id).populate({
-            path: "applicants.user",
-            select: "name profilePicture"
-        });
+        const user = await User.findOne({ auth0Id: req.oidc.user.sub });
 
-        if (!service) {
-            return res.status(404).json({ message: "Service not found" });
+        if (!user) {
+            return res.status(401).json({ message: "Unauthorized: User not found." });
         }
 
-        res.status(200).json(service.applicants);
+        const services = await Service.find({ provider: user._id })
+            .populate("applicants.user", "name profilePicture");
+
+        if (!services.length) {
+            return res.status(404).json({ message: "No applicants found." });
+        }
+
+        const applicantsList = services.flatMap(service => 
+            service.applicants.map(applicant => ({
+                serviceId: service._id,
+                serviceTitle: service.title,
+                ...applicant
+            }))
+        );
+
+        res.status(200).json(applicantsList);
     } catch (error) {
-        console.error("Error fetching applicants:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
+
+
+
 

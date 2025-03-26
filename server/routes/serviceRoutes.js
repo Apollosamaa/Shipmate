@@ -1,5 +1,5 @@
 import express from "express";
-import { createService, getServices, getServicesByUser, searchServices, applyService, saveService, getServiceById, deleteService, getServiceApplicants } from "../controllers/serviceController.js";
+import { createService, getServices, getServicesByUser, searchServices, applyService, saveService, getServiceById, deleteService, getMyApplicants } from "../controllers/serviceController.js";
 import protect from "../middleware/protect.js";
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.get("/services/:id", protect, getServiceById);
 //delete service
 router.delete("/services/:id", protect, deleteService);
 
-// Get applicants for a service
-router.get("/services/:id/applicants", protect, getServiceApplicants);
+// Get all applicants for services owned by the logged-in provider
+router.get("/my-services/applicants", protect, getMyApplicants);
 
 export default router;
