@@ -42,7 +42,9 @@ const serviceSchema = new mongoose.Schema({
 
     applicants: [{ 
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
-        status: { type: String, enum: ["pending", "accepted", "rejected", "completed"], default: "pending" }
+        status: { type: String, enum: ["pending", "accepted", "rejected", "completed"], default: "pending" },
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: Date.now }
     }],
 
     likes: [{

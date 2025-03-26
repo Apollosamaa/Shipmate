@@ -1,5 +1,9 @@
 interface Applicant {
-    user: string;
+    user: {
+        _id: string;
+        name: string;
+        profilePicture?: string;
+    };
     status: string;
     _id: string;
 }
@@ -23,4 +27,4 @@ interface Service {
     updatedAt: string;
 }
 
-export type { Service };
+export type { Service, Applicant };

@@ -4,6 +4,7 @@ import Header from '@/Components/Header'
 import MyService from '@/Components/ServiceItem/MyService';
 import MyServiceSavedView from '@/Components/ServiceItem/MyServiceSavedView';
 import MyServiceViewOnly from '@/Components/ServiceItem/MyServiceViewOnly';
+import MyApplicantsTable from '@/Components/ServiceItem/MyApplicantsTable';
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext'
 import { Service } from '@/types/types';
@@ -27,30 +28,21 @@ function page() {
     }
   }, [isAuthenticated])
 
-  console.log("All Services:", services);
-
-  services.forEach((service: Service) => {
-    console.log(`Checking Service: ${service.title}`, service.applicants);
-  });
-
   const requestServices = services.filter((service: Service) => 
-    service.applicants.some((applicant: any) => {
-      console.log("Applicant:", applicant);
-      return applicant?.user === userId;
-    })
+    service.applicants.some((applicant: any) => applicant?.user === userId)
   );
+  
 
   const savedServices = services.filter((service: Service) =>
     service.likes.includes(userId)
   );
   
-
-  console.log("Filtered Requested Services:", requestServices);
-
-
   if(loading){
     return null;
   }
+
+  console.log("All Services:", services);
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -65,7 +57,15 @@ function page() {
             `}
             onClick={()=> setActiveTab("posts")}
           >
-              My Service Posts
+            My Service Posts
+          </button>
+          <button 
+            className={`border border-gray-400 px-8 py-2 rounded-full font-medium
+              ${activeTab === "applicants" ? "border-transparent bg-[#7263f3] text-white" : "border-gray-400"}
+            `}
+            onClick={() => setActiveTab("applicants")}
+          >
+            My Applicants
           </button>
           <button className={`border border-gray-400 px-8 py-2 rounded-full font-medium
             ${
@@ -89,13 +89,19 @@ function page() {
 
         {activeTab === "posts" && userServices.length === 0 && (
           <div className="mt-8 flex items-center">
-            <p className="text-2xl font-bold">No Service posts found.</p>
+            <p className="text-2xl font-bold">No service posts found.</p>
           </div>
         )}
 
         {activeTab === "request" && requestServices.length === 0 && (
           <div className="mt-8 flex items-center">
             <p className="text-2xl font-bold">No services request found.</p>
+          </div>
+        )}
+
+        {activeTab === "saved" && savedServices.length === 0 && (
+          <div className="mt-8 flex items-center">
+            <p className="text-2xl font-bold">No saved services found.</p>
           </div>
         )}
 
@@ -107,7 +113,7 @@ function page() {
             requestServices.map((service: Service) => (<MyServiceViewOnly key={service._id} service={service}/>))}
 
           {activeTab === "saved" &&
-              savedServices.map((service: Service) => <MyServiceSavedView key={service._id} service={service} />)}
+            savedServices.map((service: Service) => <MyServiceSavedView key={service._id} service={service} />)}
         </div>
 
       </div>
