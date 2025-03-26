@@ -28,9 +28,8 @@ function MyService({ service }: ServiceProps) {
 
                 <div>
                     <CardTitle className="text-xl font-bold truncate">{service.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                        {service.provider.name}: {applicants.length}{" "}
-                        {applicants.length > 1 ? "Applicants" : "Applicants"}
+                    <p className="text-sm text-muted-foreground font-semibold">
+                        {applicants?.length > 0 ? `${applicants.length} Applicant(s)` : "No Applicants Yet"}
                     </p>
                 </div>
             </div>

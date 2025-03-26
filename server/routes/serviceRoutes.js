@@ -15,11 +15,15 @@ router.get("/services/search", searchServices);
 router.put("/services/apply/:id", protect, applyService);
 
 //save services and unsave
-router.put("/services/save/:id", protect, saveService)
+router.put("/services/save/:id", protect, saveService);
 
 //get service by id 
 router.get("/services/:id", protect, getServiceById);
 
 //delete service
-router.delete("/services/:id", protect, deleteService)
+router.delete("/services/:id", protect, deleteService);
+
+// Get applicants for a service
+router.get("/services/:id/applicants", protect, getServiceApplicants);
+
 export default router;

@@ -283,3 +283,22 @@ export const deleteService = asyncHandler(async (req, res) => {
         });
     }
 })
+
+// Get applicants for a specific service
+export const getServiceApplicants = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const service = await Service.findById(id)
+            .populate("applicants.user", "name email profilePicture");
+
+        if (!service) {
+            return res.status(404).json({ message: "Service not found" });
+        }
+
+        return res.status(200).json(service.applicants);
+    } catch (error) {
+        console.log("Error in getServiceApplicants: ", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
