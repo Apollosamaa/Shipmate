@@ -11,7 +11,7 @@ import { Bookmark } from 'lucide-react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { bookmark, bookmarkEmpty } from "@/utils/Icons"
 
 function page() {
@@ -65,6 +65,7 @@ function page() {
       <Header />
       
       <div className="p-8 mb-8 mx-auto w-[90%] rounded-md flex gap-8">
+        
         <div className="w-[26%] flex flex-col gap-8">
           <ServiceCard activeService service={service}/>
 

@@ -27,7 +27,28 @@ export default function RootLayout({
       <body
         className={`${roboto.className} antialiased`}
       >
-        <Toaster position="top-center"/>
+        <Toaster 
+                position="top-right"
+                toastOptions={{
+                  style: {
+                    background: '#363636',
+                    color: '#fff',
+                  },
+                  success: {
+                    duration: 3000,
+                    iconTheme: {
+                      primary: '#10B981',
+                      secondary: '#fff',
+                    },
+                  },
+                  error: {
+                    duration: 4000,
+                  },
+                  loading: {
+                    duration: 2000,
+                  }
+                }}
+          />
         <ContextProvider>{children}</ContextProvider>
       </body>
     </html>

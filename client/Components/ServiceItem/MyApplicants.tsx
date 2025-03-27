@@ -86,29 +86,6 @@ const MyApplicants = () => {
 
   return (
     <div className="space-y-4 mt-6">
-      {/* Toast Provider - Renders at root level */}
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: '#10B981',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            duration: 4000,
-          },
-          loading: {
-            duration: 2000,
-          }
-        }}
-      />
       
       {applicants.map((applicant) => (
         <div key={applicant._id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
