@@ -284,35 +284,52 @@ export const deleteService = asyncHandler(async (req, res) => {
     }
 })
 
+//get applicants
 export const getMyApplicants = asyncHandler(async (req, res) => {
     try {
         const user = await User.findOne({ auth0Id: req.oidc.user.sub });
-
-        if (!user) {
-            return res.status(401).json({ message: "Unauthorized: User not found." });
-        }
+        if (!user) return res.status(401).json({ message: "Unauthorized" });
 
         const services = await Service.find({ provider: user._id })
-            .populate("applicants.user", "name profilePicture");
+            .populate("applicants.user", "name profilePicture email");
 
-        if (!services.length) {
-            return res.status(404).json({ message: "No applicants found." });
-        }
-
-        const applicantsList = services.flatMap(service => 
-            service.applicants.map(applicant => ({
-                serviceId: service._id,
-                serviceTitle: service.title,
-                ...applicant
-            }))
+        const pendingApplicants = services.flatMap(service => 
+            service.applicants
+                .filter(applicant => applicant.status === "pending") // Only pending
+                .map(applicant => ({
+                    serviceId: service._id,
+                    serviceTitle: service.title,
+                    applicantId: applicant.user._id,
+                    ...applicant.toObject() // Spread applicant details
+                }))
         );
 
-        res.status(200).json(applicantsList);
+        res.status(200).json(pendingApplicants);
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
+//update applicants status
+export const updateApplicantStatus = asyncHandler(async (req, res) => {
+    try {
+        const { id: serviceId, applicantId } = req.params;
+        const { status } = req.body;
+
+        const service = await Service.findById(serviceId);
+        if (!service) return res.status(404).json({ message: "Service not found" });
+
+        const applicant = service.applicants.id(applicantId);
+        if (!applicant) return res.status(404).json({ message: "Applicant not found" });
+
+        applicant.status = status;
+        await service.save();
+
+        res.status(200).json({ message: "Status updated" });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 
 
