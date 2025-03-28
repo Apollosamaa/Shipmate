@@ -124,14 +124,14 @@ export const ServicesContextProvider = ({children}) => {
     // apply to a service
     const applyToService = async (serviceId) => {
         try {
-            const res = await axios.put(`/api/v1/services/apply/${serviceId}`);
-            toast.success("Application submitted successfully");
-            getServices();
+          const res = await axios.put(`/api/v1/services/apply/${serviceId}`);
+          await getServices(); // Refresh services data
+          return res.data;
         } catch (error) {
-            console.log("Error applying to services", error);
-            toast.error(error.response.data.message);
+          console.error("Error applying to service:", error.response?.data || error.message);
+          throw error; // Re-throw to handle in component
         }
-    };
+      };
 
     // delete a service
     const deleteService = async (serviceId) => {

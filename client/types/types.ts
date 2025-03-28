@@ -1,10 +1,12 @@
+export type ApplicationStatus = "pending" | "accepted" | "rejected" | "completed";
+
 interface Applicant {
     user: {
         _id: string;
         name: string;
         profilePicture?: string;
     };
-    status: string;
+    status: ApplicationStatus;
     _id: string;
 }
 

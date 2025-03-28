@@ -140,47 +140,53 @@ export const searchServices = asyncHandler(async (req, res) => {
     }
 })
 
-//apply for services
-export const applyService = asyncHandler(async (req, res) =>{
+export const applyService = asyncHandler(async (req, res) => {
     try {
         const service = await Service.findById(req.params.id);
-
-        if(!service){
-            return res.status(404).json({
-                message: "Service not found",
-            });
+        if (!service) {
+        return res.status(404).json({ message: "Service not found" });
         }
 
         const user = await User.findOne({ auth0Id: req.oidc.user.sub });
-
         if (!user) {
-            return res.status(404).json({
-                message: "User not found",
-            });
+        return res.status(404).json({ message: "User not found" });
         }
 
-        // Check if user has already applied and is still pending or accepted
+        // Check if user is the provider
+        if (service.provider.equals(user._id)) {
+        return res.status(400).json({ message: "You can't apply to your own service" });
+        }
+
+        // Find ANY existing application (regardless of status)
         const existingApplication = service.applicants.find(applicant =>
-            applicant.user.equals(user._id) && 
-            (applicant.status === "pending" || applicant.status === "accepted")
+        applicant.user.equals(user._id)
         );
 
         if (existingApplication) {
-            return res.status(400).json({
-                message: "You have already applied for this service.",
+        // Block only if status is pending/accepted
+        if (['pending', 'accepted'].includes(existingApplication.status)) {
+            return res.status(400).json({ 
+            message: "You have already applied for this service." 
             });
         }
-
-        // Add user to applicants list with "pending" status
-        service.applicants.push({ user: user._id, status: "pending" });
+        
+        // For rejected/completed, update status to pending
+        existingApplication.status = "pending";
+        existingApplication.updatedAt = new Date();
+        } else {
+        // New application
+        service.applicants.push({ 
+            user: user._id, 
+            status: "pending",
+            createdAt: new Date()
+        });
+        }
 
         await service.save();
         return res.status(200).json(service);
-    } catch ( error ){
-        console.log("Error in applyService: ", error);
-        return res.status(500).json({
-            message: "Internal Server Error",
-        });
+    } catch (error) {
+        console.error("Error in applyService:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 })
 

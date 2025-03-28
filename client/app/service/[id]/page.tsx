@@ -13,6 +13,8 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { bookmark, bookmarkEmpty } from "@/utils/Icons"
+import { getApplicationStatus } from '@/utils/applicationStatus';
+import { ApplyButton } from '@/Components/ui/ApplyButton';
 
 function page() {
 
@@ -23,16 +25,29 @@ function page() {
   const { id } = params;
 
   const [isSaved, setIsSaved] = React.useState(false);
-  const [isApplied, setIsApplied] = React.useState(false);
 
   const service = services.find((service: Service) => service._id === id);
   const otherServices = services.filter((service: Service) => service._id !== id);
 
-  useEffect(() => {
-    if (service) {
-      setIsApplied(service.applicants.some((applicant: { user: string }) => applicant.user === userProfile._id));
+  const status = getApplicationStatus(service, userProfile?._id);
+
+  const handleApply = async () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
     }
-  }, [service, userProfile._id]);  
+  
+    try {
+      const result = await applyToService(service._id);
+      toast.success(result?.message || "Application submitted!");
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to apply. Please try again.");
+      }
+    }
+  }; 
   
   useEffect(() => {
     if(service){
@@ -125,21 +140,7 @@ function page() {
         </div>
 
         <div className="w-[26%] flex flex-col gap-8">
-          <button className={`text-white py-4 rounded-full hover:text-white ${isApplied ? "bg-green-500 hover:bg-green-500" : "bg-[#7263f3] hover:bg-[#7263f3]/90"}`}
-            onClick={()=> {
-              if(isAuthenticated){
-                if(!isApplied) {
-                  applyToService(service._id)
-                  setIsApplied(true)
-                } else{
-                  toast.error("You have already applied to this service")
-                }
-              } else {
-                router.push("http://localhost:8000/login")
-              }
-            }}>
-            {isApplied ? "Applied" : "Apply Now"}
-          </button>
+        <ApplyButton status={status} onClick={handleApply} />
 
           <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
             <h3 className="text-lg font-semibold">Other Information</h3>
