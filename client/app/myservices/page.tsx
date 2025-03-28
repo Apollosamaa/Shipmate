@@ -90,20 +90,30 @@ function page() {
         </div>
 
         {activeTab === "posts" && userServices.length === 0 && (
-          <div className="mt-8 flex items-center">
-            <p className="text-2xl font-bold">No service posts found.</p>
+          
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+            <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p className="text-xl font-medium">No service post found</p>
           </div>
         )}
 
         {activeTab === "request" && requestServices.length === 0 && (
-          <div className="mt-8 flex items-center">
-            <p className="text-2xl font-bold">No service requests found.</p>
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+            <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p className="text-xl font-medium">No service request found</p>
           </div>
         )}
 
         {activeTab === "saved" && savedServices.length === 0 && (
-          <div className="mt-8 flex items-center">
-            <p className="text-2xl font-bold">No saved services found.</p>
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+            <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p className="text-xl font-medium">No saved service found</p>
           </div>
         )}
 
