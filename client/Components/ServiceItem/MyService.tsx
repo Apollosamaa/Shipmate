@@ -26,7 +26,7 @@ function MyService({ service }: ServiceProps) {
                 onClick={() => router.push(`/service/${service._id}`)}
             >
                 <Image 
-                    alt="Provider profile" 
+                    alt={`${service.provider.name}'s profile`}
                     src={provider.profilePicture || '/avatar.png'} 
                     width={48} 
                     height={48} 

@@ -95,7 +95,7 @@ function page() {
               <div className="flex items-center gap-2">
 
                 <div className="w-14 h-14 relative rounded-md overflow-hidden flex items-center justify-center bg-gray-200">
-                  <Image src={profilePicture || "/avatar.png"} alt={name} width={45} height={45} className="rounded-md"/>
+                  <Image src={profilePicture || "/avatar.png"} alt={name || "name"} width={45} height={45} className="rounded-md"/>
                 </div>
 
                 <div>
