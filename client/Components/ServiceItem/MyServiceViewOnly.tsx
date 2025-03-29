@@ -14,7 +14,7 @@ interface ServiceProps {
     service: Service;
 }
 
-function MyService({ service }: ServiceProps) {
+function MyServiceViewOnly({ service }: ServiceProps) {
     const { updateApplicationStatus } = useServicesContext();
     const router = useRouter();
     const { userProfile } = useGlobalContext();
@@ -35,7 +35,7 @@ function MyService({ service }: ServiceProps) {
 
     return (
         <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col h-full">
-            {/* Header with provider info */}
+            
             <div 
                 className="flex items-center gap-3 mb-4 cursor-pointer group"
                 onClick={() => router.push(`/service/${service._id}`)}
@@ -53,7 +53,6 @@ function MyService({ service }: ServiceProps) {
                 </div>
             </div>
 
-            {/* Tags section */}
             {service.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                     {service.tags.map((tag, index) => (
@@ -68,7 +67,6 @@ function MyService({ service }: ServiceProps) {
                 </div>
             )}
 
-            {/* Status and action button row */}
             <div className="mt-auto pt-4 flex justify-between items-center border-t border-gray-100">
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500">Status:</span>
@@ -104,4 +102,4 @@ function MyService({ service }: ServiceProps) {
     )
 }
 
-export default MyService
+export default MyServiceViewOnly

@@ -16,44 +16,63 @@ interface ServiceProps {
 
 function MyService({ service }: ServiceProps) {
     const { deleteService } = useServicesContext();
-
     const { applicants, provider } = service;
-
     const router = useRouter();
 
     return (
-        <div className="p-8 bg-white rounded-xl flex flex-col gap-5">
-            <div className="flex items-center space-x-4 mb-2 cursor-default" onClick={()=>router.push(`/service/${service._id}`)}>
-                <Image alt={`logo`} src={service.provider.profilePicture || '/avatar.png'} width={48} height={48} className="rounded-full"/>
-
-                <div>
+        <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+            <div 
+                className="flex items-center space-x-4 mb-4 cursor-pointer group"
+                onClick={() => router.push(`/service/${service._id}`)}
+            >
+                <Image 
+                    alt="Provider profile" 
+                    src={provider.profilePicture || '/avatar.png'} 
+                    width={48} 
+                    height={48} 
+                    className="rounded-full border-2 border-gray-200 group-hover:border-[#7263f3] transition-colors"
+                />
+                <div className="group-hover:text-[#7263f3] transition-colors">
                     <CardTitle className="text-xl font-bold truncate">{service.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground font-semibold">
+                    <p className="text-sm font-semibold text-muted-foreground group-hover:text-[#7263f3]/80">
                         {applicants?.length > 0 ? `${applicants.length} Applicant(s)` : "No Applicants Yet"}
                     </p>
                 </div>
             </div>
-            <div>
+
+            <div className="mt-2">
                 <p className="text-sm text-muted-foreground mb-4">Posted {formatDates(service.createdAt)}</p>
 
-                <div className="flex justify-between">
-                    <div>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                            {service.tags.map((tag, index)=>
-                                <Badge key={index} variant="outline">
-                                    {tag}
-                                </Badge>
-                            )}
-                        </div>
-                    </div>
-                    <div className="self-end">
-                        <Button variant="ghost" size="icon" className="text-gray-500">
-                            <Pencil size={14}/>
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {service.tags.map((tag, index) => (
+                        <Badge 
+                            key={index} 
+                            variant="outline"
+                            className="hover:bg-[#7263f3]/10 hover:text-[#7263f3] transition-colors"
+                        >
+                            #{tag}
+                        </Badge>
+                    ))}
+                </div>
+
+                <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                    <div className="flex-1"></div>
+                    <div className="flex gap-1">
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-gray-500 hover:text-[#7263f3] hover:bg-[#7263f3]/10"
+                        >
+                            <Pencil size={16}/>
                             <span className="sr-only">Edit Service</span>
                         </Button>
-
-                        <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-300" onClick={()=> deleteService(service._id)}>
-                            <Trash size={14} />
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-gray-500 hover:text-red-500 hover:bg-red-500/10"
+                            onClick={() => deleteService(service._id)}
+                        >
+                            <Trash size={16} />
                             <span className="sr-only">Delete Service</span>
                         </Button>
                     </div>
