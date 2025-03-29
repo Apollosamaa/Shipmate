@@ -1,5 +1,17 @@
 import express from "express";
-import { createService, getServices, getServicesByUser, searchServices, applyService, saveService, getServiceById, deleteService, getMyApplicants, updateApplicantStatus } from "../controllers/serviceController.js";
+import { 
+    createService, 
+    getServices, 
+    getServicesByUser, 
+    searchServices, 
+    applyService, 
+    saveService,
+    getServiceById, 
+    deleteService,
+    getMyApplicants, 
+    updateApplicantStatus, 
+    updateServiceStatus 
+} from "../controllers/serviceController.js";
 import protect from "../middleware/protect.js";
 
 const router = express.Router();
@@ -28,5 +40,8 @@ router.get("/my-services/applicants", protect, getMyApplicants);
 
 //update services applicants status
 router.put("/services/:id/applicants/:applicantId", protect, updateApplicantStatus);
+
+// update services status as completed
+router.put("/services/status/:id", protect, updateServiceStatus);
 
 export default router;

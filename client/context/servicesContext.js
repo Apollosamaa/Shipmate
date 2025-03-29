@@ -156,6 +156,34 @@ export const ServicesContextProvider = ({children}) => {
         setFilters((prev)=> ({...prev, [filterName]: !prev[filterName]}))
     };
 
+    // mark services as completed
+    const updateApplicationStatus = async (serviceId, userId, status) => {
+        try {
+            const res = await axios.put(`/api/v1/services/status/${serviceId}`, { status });
+            
+            // Update local state
+            setServices(prevServices => 
+                prevServices.map(service => 
+                    service._id === serviceId ? res.data : service
+                )
+            );
+            
+            // Also update userServices if needed
+            setUserServices(prevUserServices => 
+                prevUserServices.map(service => 
+                    service._id === serviceId ? res.data : service
+                )
+            );
+            
+            toast.success("Status updated successfully");
+            return res.data;
+        } catch (error) {
+            console.error("Error updating application status:", error);
+            toast.error(error.response?.data?.message || "Failed to update status");
+            throw error;
+        }
+    };
+
     useEffect(() => {
         getServices();
     }, []);
@@ -184,6 +212,7 @@ export const ServicesContextProvider = ({children}) => {
             filters,
             setFilters,
             handleFilterChange,
+            updateApplicationStatus,
         }}>
             { children }
         </ServicesContext.Provider>

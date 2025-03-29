@@ -8,6 +8,8 @@ interface Applicant {
     };
     status: ApplicationStatus;
     _id: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface Service {

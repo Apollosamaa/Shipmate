@@ -140,6 +140,7 @@ export const searchServices = asyncHandler(async (req, res) => {
     }
 })
 
+//apply a services
 export const applyService = asyncHandler(async (req, res) => {
     try {
         const service = await Service.findById(req.params.id);
@@ -337,6 +338,48 @@ export const updateApplicantStatus = asyncHandler(async (req, res) => {
     }
 });
 
+// Update service status (for applicants to mark as completed)
+export const updateServiceStatus = asyncHandler(async (req, res) => {
+    try {
+        const { id: serviceId } = req.params;
+        const { status } = req.body;
+        const user = await User.findOne({ auth0Id: req.oidc.user.sub });
+
+        if (!user) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const service = await Service.findById(serviceId);
+        if (!service) {
+            return res.status(404).json({ message: "Service not found" });
+        }
+
+        // Find the applicant's application
+        const application = service.applicants.find(app => 
+            app.user.equals(user._id)
+        );
+
+        if (!application) {
+            return res.status(404).json({ message: "Application not found" });
+        }
+
+        // Only allow updating to "completed" status if currently "accepted"
+        if (status === "completed" && application.status !== "accepted") {
+            return res.status(400).json({ 
+                message: "Only accepted services can be marked as completed" 
+            });
+        }
+
+        application.status = status;
+        application.updatedAt = new Date();
+        await service.save();
+
+        return res.status(200).json(service);
+    } catch (error) {
+        console.error("Error updating service status:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 
 
