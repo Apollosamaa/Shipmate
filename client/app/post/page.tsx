@@ -1,4 +1,5 @@
 "use client"
+import Footer from '@/Components/Footer';
 import Header from '@/Components/Header'
 import ServiceForm from '@/Components/ServicePost/ServiceForm'
 import { useGlobalContext } from '@/context/globalContext'
@@ -17,17 +18,20 @@ function page() {
   }, [isAuthenticated])
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header/>
 
-      <h2 className="flex-1 pt-8 mx-auto w-[90%] text-3xl font-bold text-black">
-        Create a Service Post
-      </h2>
+      <div className="flex-1 mb-10 mx-auto w-[90%] flex flex-col">
+        <h2 className="flex-1 pt-8 mx-auto w-[90%] text-3xl font-bold text-black">
+          Create a Service Post
+        </h2>
 
-      <div className="flex-1 pt-8 w-[90%] mx-auto flex justify-center items-center">
-        <ServiceForm/>
+        <div className="flex-1 pt-8 w-[90%] mx-auto flex justify-center items-center">
+          <ServiceForm/>
+        </div>
       </div>
       
+      <Footer />
     </div>
   )
 }

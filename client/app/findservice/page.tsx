@@ -9,6 +9,7 @@ import { Service } from '@/types/types';
 import { grip, list, table } from '@/utils/Icons';
 import Image from 'next/image';
 import React from 'react'
+import Footer from '@/Components/Footer';
 
 function page() {
 
@@ -55,7 +56,7 @@ function page() {
     : services;
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
 
       <div className="relative px-16 bg-[#D7DEDC] overflow-hidden">
@@ -153,6 +154,7 @@ function page() {
           </div>
         </div>
       </div>
+      < Footer />
     </div>
   )
 }
