@@ -381,5 +381,74 @@ export const updateServiceStatus = asyncHandler(async (req, res) => {
     }
 });
 
+// Add rating to a service
+export const addServiceRating = asyncHandler(async (req, res) => {
+    try {
+        console.log("Rating request received:", req.body); // Log incoming data
+        const { id: serviceId } = req.params;
+        const { userId, rating, review } = req.body;
+
+        // Validate rating
+
+        if (!userId) {
+            console.log("Missing userId");
+            return res.status(400).json({ message: "User ID is required" });
+          }
+
+        if (!rating || rating < 1 || rating > 5) {
+            return res.status(400).json({ message: "Rating must be between 1 and 5" });
+        }
+
+        const service = await Service.findById(serviceId);
+        
+        if (!service) {
+            console.log("Service not found:", serviceId);
+            return res.status(404).json({ message: "Service not found" });
+        }
+
+        // Check if user has already rated this service
+        const existingRatingIndex = service.ratings.findIndex(r => 
+            r.user.toString() === userId
+        );
+
+        if (existingRatingIndex !== -1) {
+            return res.status(400).json({ message: "You have already rated this service" });
+        }
+
+        // Check if user has completed this service
+        const hasCompleted = service.applicants.some(applicant => 
+            applicant.user.toString() === userId && applicant.status === "completed"
+        );
+
+        if (!hasCompleted) {
+            return res.status(403).json({ 
+                message: "You must complete the service before rating" 
+            });
+        }
+
+        // Add new rating
+        service.ratings.push({
+            user: userId,
+            rating,
+            review: review || ""
+        });
+
+        // Calculate new average rating
+        const totalRatings = service.ratings.length;
+        const sumRatings = service.ratings.reduce((sum, r) => sum + r.rating, 0);
+        service.averageRating = sumRatings / totalRatings;
+
+        await service.save();
+
+        res.status(200).json(service);
+    } catch (error) {
+        console.error("Controller error:", error.message); // Detailed error logging
+        res.status(500).json({ 
+        message: "Internal Server Error",
+        error: error.message // Send error details to frontend
+        });
+    }
+});
+
 
 

@@ -15,7 +15,7 @@ interface ServiceProps {
 }
 
 function MyServiceViewOnly({ service }: ServiceProps) {
-    const { updateApplicationStatus } = useServicesContext();
+    const { updateApplicationStatus, addRating } = useServicesContext();
     const router = useRouter();
     const { userProfile } = useGlobalContext();
 
@@ -25,12 +25,21 @@ function MyServiceViewOnly({ service }: ServiceProps) {
     const applicationStatus = userApplication?.status || "Unknown";
     const statusUpdatedDate = userApplication?.updatedAt || null;
 
+    // Check if user has already rated this service
+    const hasRated = service.ratings.some(rating => 
+        typeof rating === "object" && "user" in rating && rating.user === userProfile._id
+    );
+
     const handleCompleteService = async () => {
         try {
             await updateApplicationStatus(service._id, userProfile._id, "completed");
         } catch (error) {
             console.error("Failed to mark service as completed:", error);
         }
+    };
+
+    const handleRateService = () => {
+        router.push(`/rate-service/${service._id}`);
     };
 
     return (
@@ -96,6 +105,23 @@ function MyServiceViewOnly({ service }: ServiceProps) {
                     >
                         Mark Complete
                     </Button>
+                )}
+
+                {applicationStatus === "completed" && !hasRated && (
+                    <Button 
+                        onClick={handleRateService}
+                        size="sm"
+                        variant="outline"
+                        className="border-[#7263f3] text-[#7263f3] hover:bg-[#7263f3]/10 transition-colors shadow-sm"
+                    >
+                        Rate Service
+                    </Button>
+                )}
+
+                {applicationStatus === "completed" && hasRated && (
+                    <Badge variant="outline" className="text-green-600 border-green-200">
+                        Rated
+                    </Badge>
                 )}
             </div>
         </div>

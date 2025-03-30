@@ -184,6 +184,27 @@ export const ServicesContextProvider = ({children}) => {
         }
     };
 
+    const addRating = async (serviceId, userId, ratingValue, reviewText) => {
+        try {
+        const res = await axios.post(`/api/v1/services/rate/${serviceId}`, {
+            userId,
+            rating: ratingValue,
+            review: reviewText || "",
+        });
+        
+        // Update both states
+        setServices(prev => prev.map(s => s._id === res.data._id ? res.data : s));
+        setUserServices(prev => prev.map(s => s._id === res.data._id ? res.data : s));
+        
+        toast.success("Rating submitted successfully");
+        return res.data;
+        } catch (error) {
+        console.error("Error adding rating:", error);
+        toast.error(error.response?.data?.message || "Failed to add rating");
+        throw error;
+        }
+    };
+
     useEffect(() => {
         getServices();
     }, []);
@@ -213,6 +234,7 @@ export const ServicesContextProvider = ({children}) => {
             setFilters,
             handleFilterChange,
             updateApplicationStatus,
+            addRating,
         }}>
             { children }
         </ServicesContext.Provider>

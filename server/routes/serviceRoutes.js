@@ -10,7 +10,8 @@ import {
     deleteService,
     getMyApplicants, 
     updateApplicantStatus, 
-    updateServiceStatus 
+    updateServiceStatus,
+    addServiceRating, 
 } from "../controllers/serviceController.js";
 import protect from "../middleware/protect.js";
 
@@ -43,5 +44,8 @@ router.put("/services/:id/applicants/:applicantId", protect, updateApplicantStat
 
 // update services status as completed
 router.put("/services/status/:id", protect, updateServiceStatus);
+
+// Add rating to a service
+router.post("/services/rate/:id", protect, addServiceRating);
 
 export default router;
