@@ -225,6 +225,73 @@ function page() {
             </div>
           </div>
 
+          <div className="p-6 flex flex-col gap-4 bg-white rounded-md mt-4">
+            <h3 className="text-lg font-semibold">Recent Reviews</h3>
+            
+            {service.ratings?.length > 0 ? (
+              <div className="space-y-4">
+                {service.ratings.slice(0, 3).map((rating: Rating) => (
+                  <div key={rating._id || Math.random()} className="border-b border-gray-100 pb-4 last:border-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={16}
+                            className={
+                              star <= rating.rating
+                                ? "fill-[#7263f3] text-[#7263f3]"
+                                : "text-gray-300"
+                            }
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium">{rating.rating.toFixed(1)}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mb-2">
+                      {typeof rating.user !== 'string' && rating.user.profilePicture && (
+                        <Image
+                          src={rating.user.profilePicture}
+                          alt={rating.user.name}
+                          width={24}
+                          height={24}
+                          className="rounded-full"
+                        />
+                      )}
+                      <p className="text-sm font-medium">
+                        {typeof rating.user === 'string' ? 'Anonymous' : rating.user.name}
+                      </p>
+                      {rating.createdAt && (
+                        <span className="text-xs text-gray-400">
+                          {formatDates(rating.createdAt)}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {rating.review && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        {rating.review}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No reviews yet</p>
+            )}
+            
+            {/* View all reviews button if there are more than 3 */}
+            {service.ratings?.length > 3 && (
+              <button 
+                className="text-sm text-[#7263f3] hover:underline mt-2 text-left"
+                onClick={() => {/* Add functionality to view all reviews */}}
+              >
+                View all {service.ratings.length} reviews
+              </button>
+            )}
+          </div>
+
         </div>
       </div>
 
