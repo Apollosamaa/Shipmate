@@ -4,7 +4,7 @@ import Header from '@/Components/Header'
 import ServiceCard from '@/Components/ServiceItem/ServiceCard'
 import { useGlobalContext } from '@/context/globalContext';
 import { useServicesContext } from '@/context/servicesContext';
-import { Service } from '@/types/types';
+import { Service, Rating } from '@/types/types';
 import { formatDates } from '@/utils/formatDates';
 import formatMoney from '@/utils/formatMoney';
 import { Bookmark } from 'lucide-react';
@@ -15,6 +15,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { bookmark, bookmarkEmpty } from "@/utils/Icons"
 import { getApplicationStatus } from '@/utils/applicationStatus';
 import { ApplyButton } from '@/Components/ui/ApplyButton';
+import { Star, StarHalf } from 'lucide-react';
+
 
 function page() {
 
@@ -173,6 +175,56 @@ function page() {
               ))}
             </div>
           </div>
+
+          <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
+            <h3 className="text-lg font-semibold">Service Ratings</h3>
+            
+            {/* Average Rating */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={18}
+                    className={
+                      star <= Math.floor(service.averageRating || 0)
+                        ? "fill-[#7263f3] text-[#7263f3]"
+                        : star === Math.ceil(service.averageRating || 0) && (service.averageRating || 0) % 1 >= 0.5
+                        ? "fill-[#7263f3]/50 text-[#7263f3]/50"
+                        : "text-gray-300"
+                    }
+                  />
+                ))}
+              </div>
+              <span className="font-bold">{(service.averageRating || 0).toFixed(1)}</span>
+              <span className="text-gray-500">({service.ratings?.length || 0} reviews)</span>
+            </div>
+
+            {/* Rating Breakdown */}
+            <div className="mt-2 space-y-1">
+              {[5, 4, 3, 2, 1].map((rating) => {
+                const count = service.ratings?.filter((r: Rating) => r.rating === rating).length || 0;
+                const percentage = service.ratings?.length 
+                  ? (count / service.ratings.length) * 100 
+                  : 0;
+                
+                return (
+                  <div key={rating} className="flex items-center gap-2 text-sm">
+                    <span className="w-4">{rating}</span>
+                    <Star className="fill-[#7263f3] text-[#7263f3]" size={14} />
+                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-[#7263f3] h-2 rounded-full" 
+                        style={{ width: `${percentage}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-gray-500 w-8 text-right">{count}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
       </div>
 
