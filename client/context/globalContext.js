@@ -78,6 +78,7 @@ export const GlobalContextProvider = ({children}) => {
             userProfile,
             loading,
             getUserProfile,
+            setUserProfile,
             serviceTitle,
             serviceDescription,
             activeServiceCategory,

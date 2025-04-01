@@ -7,32 +7,61 @@ import connect from "./db/connect.js";
 import asyncHandler from "express-async-handler";
 import fs from "fs";
 import User from "./models/UserModel.js";
+import Verification from "./models/VerificationModel.js"; // Add this import
 
 dotenv.config();
 
 const app = express();
 
 const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: process.env.SECRET,
-  baseURL: process.env.BASE_URL,
-  clientID: process.env.CLIENT_ID,
-  issuerBaseURL: process.env.ISSUER_BASE_URL,
-  routes:{
-    postLogoutRedirect: process.env.CLIENT_URL
-  }
+    authRequired: false,
+    auth0Logout: true,
+    secret: process.env.SECRET,
+    baseURL: process.env.BASE_URL,
+    clientID: process.env.CLIENT_ID,
+    issuerBaseURL: process.env.ISSUER_BASE_URL,
+    routes:{
+        postLogoutRedirect: process.env.CLIENT_URL
+    }
 };
 
 app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
-  
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended:true }));
 app.use(cookieParser());
 app.use(auth(config));
+
+// Add this new route before the dynamic route imports
+app.post('/api/v1/unverify', asyncHandler(async (req, res) => {
+    if (!req.oidc.isAuthenticated()) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    const user = await User.findOne({ auth0Id: req.oidc.user.sub });
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Remove verification
+    await Verification.deleteOne({ userId: user._id });
+    
+    // Update user status
+    user.isVerified = false;
+    await user.save();
+
+    return res.json({ 
+        success: true,
+        message: 'User unverified successfully for testing',
+        user: {
+            _id: user._id,
+            email: user.email,
+            isVerified: user.isVerified
+        }
+    });
+}));
 
 //function to check if user exists in the db
 const ensureUserInDB = asyncHandler(async(user)=>{
@@ -46,15 +75,12 @@ const ensureUserInDB = asyncHandler(async(user)=>{
                 name: user.name,
                 isVerified: false,
                 profilePicture: user.picture,
-
             });
             await newUser.save();
-
             console.log("user added to db", user);
         }else{
             console.log("user already exists in db", existingUser);
         }
-
     } catch (error){
         console.log("Error while checking user in DB", error.message);
     }
@@ -62,10 +88,7 @@ const ensureUserInDB = asyncHandler(async(user)=>{
 
 app.get("/", async(req, res)=>{
     if(req.oidc.isAuthenticated()){
-        // check if Auth0 user exists in the db
         await ensureUserInDB(req.oidc.user);
-
-        //redirect to the frontend
         return res.redirect(process.env.CLIENT_URL);
     }else{
         return res.send("Logged out");
@@ -76,7 +99,6 @@ app.get("/", async(req, res)=>{
 const routeFiles = fs.readdirSync("./routes");
 
 routeFiles.forEach((file)=>{
-    //import dynamic routes
     import(`./routes/${file}`)
     .then((route)=>{
         app.use("/api/v1/", route.default);
