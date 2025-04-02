@@ -98,7 +98,7 @@ export default function VerifyStudentPage() {
                                     name="studentId"
                                     value={formData.studentId}
                                     onChange={handleChange}
-                                    placeholder="BSSE2309754"
+                                    placeholder="Enter student ID"
                                     required
                                     className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#7263f3] focus:border-transparent"
                                 />
@@ -114,7 +114,7 @@ export default function VerifyStudentPage() {
                                     type="email"
                                     value={formData.schoolEmail}
                                     onChange={handleChange}
-                                    placeholder="name.student@peninsulamalaysia.edu.my"
+                                    placeholder="Enter peninsula student email"
                                     required
                                     className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[#7263f3] focus:border-transparent"
                                 />
