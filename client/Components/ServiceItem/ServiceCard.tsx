@@ -9,6 +9,7 @@ import { Separator } from '../ui/separator';
 import formatMoney from '@/utils/formatMoney';
 import { formatDates } from '@/utils/formatDates';
 import { bookmark, bookmarkEmpty } from '@/utils/Icons'
+import { Star } from 'lucide-react';
 
 interface ServiceProps {
     service: Service;
@@ -98,6 +99,29 @@ function ServiceCard({ service, activeService}: ServiceProps) {
                 </button>
             </div>
 
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                            key={star}
+                            size={16}
+                            className={
+                                star <= Math.floor(service.averageRating || 0)
+                                    ? "fill-[#7263f3] text-[#7263f3]"
+                                    : star === Math.ceil(service.averageRating || 0) && 
+                                    (service.averageRating || 0) % 1 >= 0.5
+                                    ? "fill-[#7263f3]/50 text-[#7263f3]/50"
+                                    : "text-gray-300"
+                            }
+                        />
+                    ))}
+                    <span className="text-sm font-medium ml-1">
+                        ({service.ratings?.length || 0})
+                    </span>
+                </div>
+            </div>
+
+
             <div className="flex itmes-center gap-2">
                 {category.map((category, index)=>(
                     <span key={index} className={`py-1 px-3 text-xs font-medium rounded-md border ${serviceCategoryBg(category)}`}>
@@ -106,12 +130,7 @@ function ServiceCard({ service, activeService}: ServiceProps) {
                 ))}
             </div>
 
-            <p>
-                {shortDescription.length > 100 
-                    ? `${shortDescription.substring(0,100)}...`
-                    : shortDescription
-                }
-            </p>
+            
 
             <Separator />
 
