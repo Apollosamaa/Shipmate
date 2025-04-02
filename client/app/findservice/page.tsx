@@ -123,7 +123,7 @@ function page() {
         
       </div>
 
-      <div className="w-[90%] mx-auto mb-14">
+      <div className="w-[90%] mx-auto mb-14 flex-grow flex flex-col">
         <div className="flex justify-between items-center">
           <h2 className="text-3xl font-bold text-black py-8">Recent Services</h2>
 
@@ -154,7 +154,7 @@ function page() {
           </div>
         </div>
       </div>
-      < Footer />
+      <Footer />
     </div>
   )
 }

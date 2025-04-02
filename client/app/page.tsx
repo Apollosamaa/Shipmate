@@ -1,5 +1,6 @@
 "use client"
 import Header from "@/Components/Header";
+import { useRouter } from "next/navigation";
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
@@ -8,6 +9,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { CheckCircleIcon, PlusCircle, Search, SearchIcon, Users } from "lucide-react";
 import Link from "next/link";
 import Footer from "@/Components/Footer";
+import { useState } from "react";
 
 export default function Home() {
 
@@ -50,8 +52,9 @@ export default function Home() {
     }
   ];
   
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
   
-
   return (
     <main>
       <Header/>
@@ -65,9 +68,19 @@ export default function Home() {
             Offer and request services within the Ship Campus community with ease
           </p>
           <div className="max-w-2xl mx-auto flex gap-4">
-            <Input type="text" placeholder="Search for services" className="flex-grow bg-white text-black"/>
-            <Button className="bg-[#7263f3] text-white">
-              <SearchIcon className="w-6 h-6"/>Search Services
+            <Input
+              type="text"
+              placeholder="Search for services"
+              className="flex-grow bg-white text-black"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Button
+              className="bg-[#7263f3] text-white"
+              onClick={() => router.push("/findservice")}
+            >
+              <SearchIcon className="w-6 h-6" />
+              Search Services
             </Button>
           </div>
         </div>
