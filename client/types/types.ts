@@ -31,17 +31,38 @@ interface Service {
     tags: string[];
     category: string[];
     applicants: Applicant[];
-    likes: string[]; // Array of user IDs
+    likes: string[];
     ratings: Rating[];
-    averageRating?: number; // Added to match your ServiceModel
+    averageRating?: number; 
     provider: {
-        _id: string; // Added to match your populated provider
-        profilePicture?: string; // Made optional to match your usage
+        _id: string; 
+        profilePicture?: string; 
         name: string;
-        email?: string; // Added as it's in your populate
+        email?: string;
     };
     createdAt: string;
     updatedAt: string;
 }
 
-export type { Service, Applicant, Rating, UserReference };
+export interface Message {
+    _id: string;
+    sender: string | UserReference;
+    receiver: string | UserReference;
+    content: string;
+    conversationId?: string;
+    serviceId?: string;
+    read: boolean;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+}
+
+export interface Conversation {
+    _id: string;
+    participants: UserReference[];
+    lastMessage: Message;
+    unreadCount: number;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+}
+
+export type { Service, Applicant, Rating, UserReference, };

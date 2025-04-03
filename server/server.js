@@ -7,7 +7,8 @@ import connect from "./db/connect.js";
 import asyncHandler from "express-async-handler";
 import fs from "fs";
 import User from "./models/UserModel.js";
-import Verification from "./models/VerificationModel.js"; // Add this import
+import Verification from "./models/VerificationModel.js";
+import chatRoutes from './routes/chatRoutes.js';
 
 dotenv.config();
 
@@ -96,8 +97,11 @@ app.get("/", async(req, res)=>{
 })
 
 //routes
-const routeFiles = fs.readdirSync("./routes");
+const routeFiles = fs.readdirSync("./routes").filter(file => file !== 'chatRoutes.js');
 
+app.use("/api/v1/chat", chatRoutes);
+
+// Then load other routes dynamically
 routeFiles.forEach((file)=>{
     import(`./routes/${file}`)
     .then((route)=>{

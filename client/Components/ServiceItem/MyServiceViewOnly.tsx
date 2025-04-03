@@ -9,6 +9,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '@/context/globalContext';
+import { ChatButton } from "@/Components/Chat/ChatButton";
 
 interface ServiceProps {
     service: Service;
@@ -96,15 +97,26 @@ function MyServiceViewOnly({ service }: ServiceProps) {
                         </span>
                     )}
                 </div>
-                
+
                 {applicationStatus === "accepted" && (
-                    <Button 
-                        onClick={handleCompleteService}
-                        size="sm"
-                        className="bg-[#7263f3] hover:bg-[#5e52d6] text-white transition-colors shadow-sm"
-                    >
-                        Mark Complete
-                    </Button>
+                    <>
+                    <div className="flex gap-1"> 
+                        <ChatButton 
+                            userId={service.provider._id.toString()}
+                            serviceId={service._id.toString()}
+                            variant="outline"
+                            size="sm"
+                            className="mr-0"
+                        />
+                        <Button 
+                            onClick={handleCompleteService}
+                            size="sm"
+                            className="bg-[#7263f3] hover:bg-[#5e52d6] text-white shadow-sm"
+                        >
+                            Mark Complete
+                        </Button>
+                    </div>
+                    </>
                 )}
 
                 {applicationStatus === "completed" && !hasRated && (

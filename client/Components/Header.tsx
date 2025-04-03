@@ -6,8 +6,8 @@ import React from 'react'
 import { useGlobalContext } from '@/context/globalContext'
 import { LogIn, UserPlus } from 'lucide-react'
 import Profile from './Profile'
-
-  
+import { MessageSquare } from "lucide-react";
+import { ChatDropdown } from './Chat/ChatDropDown'
 
 function Header() {
     const {isAuthenticated, user} = useGlobalContext();
@@ -51,7 +51,8 @@ function Header() {
         </li>
       </ul>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        <ChatDropdown />
         {isAuthenticated ? (
             <Profile />
         ) : (

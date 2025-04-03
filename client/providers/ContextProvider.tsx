@@ -2,6 +2,7 @@
 import React from 'react'
 import { GlobalContextProvider } from "@/context/globalContext"
 import { ServicesContextProvider } from "@/context/servicesContext"
+import { ChatContextProvider } from '@/context/chatContext';
 
 interface Props {
     children: React.ReactNode;
@@ -9,9 +10,9 @@ interface Props {
 
 function ContextProvider({children}: Props) {
   return (
-    <GlobalContextProvider><ServicesContextProvider>
+    <GlobalContextProvider><ServicesContextProvider><ChatContextProvider>
       {children}
-    </ServicesContextProvider></GlobalContextProvider>
+      </ChatContextProvider></ServicesContextProvider></GlobalContextProvider>
   )
 }
 
