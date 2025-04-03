@@ -11,6 +11,7 @@ interface ChatButtonProps {
     variant?: "default" | "outline" | "ghost";
     size?: "sm" | "default";
     className?: string;
+    openInNewTab?: boolean;
 }
 
 interface Conversation {
@@ -32,11 +33,22 @@ export const ChatButton = ({
     serviceId, 
     variant = "outline",
     size = "sm",
-    className = ""
+    className = "",
+    openInNewTab = false
 }: ChatButtonProps) => {
     const router = useRouter();
     const { conversations = [], sendMessage, fetchConversations } = useChatContext();
     const [isStarting, setIsStarting] = useState(false);
+
+    const navigateToChat = (path: string) => {
+        if (openInNewTab) {
+            // Open in new tab
+            window.open(path, '_blank', 'noopener,noreferrer');
+        } else {
+            // Navigate in same tab
+            router.push(path);
+        }
+    };
 
     const handleClick = async () => {
         setIsStarting(true);
@@ -47,7 +59,7 @@ export const ChatButton = ({
                 : null;
 
             if (existingConv) {
-                router.push(`/chat/${existingConv._id}`);
+                navigateToChat(`/chat/${existingConv._id}${serviceId ? `?service=${serviceId}` : ''}`);
                 return;
             }
 
@@ -64,16 +76,16 @@ export const ChatButton = ({
                 : null;
 
             if (newConv) {
-                router.push(`/chat/${newConv._id}`);
+                navigateToChat(`/chat/${newConv._id}${serviceId ? `?service=${serviceId}` : ''}`);
             } else {
                 console.error("Failed to create new conversation");
                 // Fallback: redirect to chat with userId directly
-                router.push(`/chat/${userId}`);
+                navigateToChat(`/chat/${userId}${serviceId ? `?service=${serviceId}` : ''}`);
             }
         } catch (error) {
             console.error("Failed to start conversation:", error);
             // Fallback: redirect to chat with userId directly
-            router.push(`/chat/${userId}`);
+            navigateToChat(`/chat/${userId}${serviceId ? `?service=${serviceId}` : ''}`);
         } finally {
             setIsStarting(false);
         }

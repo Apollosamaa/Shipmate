@@ -27,9 +27,10 @@ interface Conversation {
 
 interface ChatListProps {
   compact?: boolean;
+  openInNewTab?: boolean;
 }
 
-export const ChatList = ({ compact = false }: ChatListProps) => {
+export const ChatList = ({ compact = false, openInNewTab = false }: ChatListProps) => {
   const { conversations, loading, fetchConversations } = useChatContext();
   const pathname = usePathname();
   const router = useRouter();
@@ -62,7 +63,53 @@ export const ChatList = ({ compact = false }: ChatListProps) => {
   }, [fetchConversations, initialLoad]);
 
   const handleNewConversation = () => {
-    router.push(`/chat/${serviceId}${serviceId ? `?service=${serviceId}` : ''}`);
+    const url = `/chat/${serviceId}${serviceId ? `?service=${serviceId}` : ''}`;
+    if (openInNewTab) {
+      window.open(url, '_blank');
+    } else {
+      router.push(url);
+    }
+  };
+  
+  // Custom conversation item that supports opening in new tab
+  const ConversationItem = ({ conversation }: { conversation: Conversation }) => {
+    const handleClick = (e: React.MouseEvent) => {
+      if (openInNewTab) {
+        e.preventDefault();
+        window.open(`/chat/${conversation._id}`, '_blank');
+      }
+    };
+    
+    return (
+      <Link
+        key={conversation._id}
+        href={`/chat/${conversation._id}`}
+        onClick={handleClick}
+        className={`flex items-center gap-3 p-4 border-b hover:bg-gray-50 ${
+          pathname.includes(`/chat/${conversation._id}`) 
+            ? "bg-[#7263f3]/10" 
+            : ""
+        }`}
+      >
+        <Avatar>
+          <AvatarImage src={conversation.user.profilePicture} />
+          <AvatarFallback>
+            {conversation.user.name.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-medium truncate">{conversation.user.name}</h3>
+          <p className="text-sm text-gray-500 truncate">
+            {conversation.lastMessage.content}
+          </p>
+        </div>
+        {conversation.unreadCount > 0 && (
+          <span className="bg-[#7263f3] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            {conversation.unreadCount}
+          </span>
+        )}
+      </Link>
+    );
   };
 
   return (
@@ -92,33 +139,7 @@ export const ChatList = ({ compact = false }: ChatListProps) => {
         </div>
       ) : (
         sortedConversations.map((conversation: Conversation) => (
-          <Link
-            key={conversation._id}
-            href={`/chat/${conversation._id}`}
-            className={`flex items-center gap-3 p-4 border-b hover:bg-gray-50 ${
-              pathname.includes(`/chat/${conversation._id}`) 
-                ? "bg-[#7263f3]/10" 
-                : ""
-            }`}
-          >
-            <Avatar>
-              <AvatarImage src={conversation.user.profilePicture} />
-              <AvatarFallback>
-                {conversation.user.name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium truncate">{conversation.user.name}</h3>
-              <p className="text-sm text-gray-500 truncate">
-                {conversation.lastMessage.content}
-              </p>
-            </div>
-            {conversation.unreadCount > 0 && (
-              <span className="bg-[#7263f3] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {conversation.unreadCount}
-              </span>
-            )}
-          </Link>
+          <ConversationItem key={conversation._id} conversation={conversation} />
         ))
       )}
     </div>

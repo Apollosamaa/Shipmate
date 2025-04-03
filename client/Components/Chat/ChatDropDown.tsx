@@ -72,7 +72,7 @@ export const ChatDropdown = () => {
           </div>
         ) : (
           <div className="max-h-[400px] overflow-y-auto">
-            <ChatList compact />
+            <ChatList compact openInNewTab={true} />
           </div>
         )}
       </PopoverContent>

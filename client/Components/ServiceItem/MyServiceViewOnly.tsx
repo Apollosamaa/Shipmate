@@ -107,6 +107,7 @@ function MyServiceViewOnly({ service }: ServiceProps) {
                             variant="outline"
                             size="sm"
                             className="mr-0"
+                            openInNewTab={true}
                         />
                         <Button 
                             onClick={handleCompleteService}
