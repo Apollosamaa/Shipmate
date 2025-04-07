@@ -1,12 +1,13 @@
 "use client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/Components/ui/avatar";
+import { Check, CheckCheck } from "lucide-react";
 
 interface MessageBubbleProps {
   content: string;
   isSender: boolean;
   senderImage?: string;
   senderName?: string;
-  timestamp: Date | string; // Update to accept both types
+  timestamp: Date | string;
   isRead?: boolean;
 }
 
@@ -18,7 +19,6 @@ export const MessageBubble = ({
   timestamp,
   isRead = true
 }: MessageBubbleProps) => {
-  // Convert timestamp to Date if it's a string
   const messageDate = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
   
   return (
@@ -37,18 +37,24 @@ export const MessageBubble = ({
           : "bg-gray-100 rounded-tl-none"
       }`}>
         <p className="text-sm">{content}</p>
-        <p className={`text-xs mt-1 ${
+        <div className={`flex items-center justify-end gap-1 mt-1 ${
           isSender ? "text-[#e0dcff]" : "text-gray-500"
         }`}>
-          {messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          <span className="text-xs">
+            {messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
           {isSender && (
-            <span className={`ml-2 ${
+            <span className={`ml-1 ${
               isRead ? "text-[#e0dcff]" : "text-[#ffffff80]"
             }`}>
-              {isRead ? "✓✓" : "✓"}
+              {isRead ? (
+                <CheckCheck className="h-3 w-3" />
+              ) : (
+                <Check className="h-3 w-3" />
+              )}
             </span>
           )}
-        </p>
+        </div>
       </div>
     </div>
   );
