@@ -16,7 +16,7 @@ interface ServiceProps {
 }
 
 function MyServiceViewOnly({ service }: ServiceProps) {
-    const { updateApplicationStatus, addRating } = useServicesContext();
+    const { updateApplicationStatus } = useServicesContext();
     const router = useRouter();
     const { userProfile } = useGlobalContext();
 
@@ -26,7 +26,6 @@ function MyServiceViewOnly({ service }: ServiceProps) {
     const applicationStatus = userApplication?.status || "Unknown";
     const statusUpdatedDate = userApplication?.updatedAt || null;
 
-    // Check if user has already rated this service
     const hasRated = service.ratings.some(rating => 
         typeof rating === "object" && "user" in rating && rating.user === userProfile._id
     );
@@ -44,8 +43,8 @@ function MyServiceViewOnly({ service }: ServiceProps) {
     };
 
     return (
-        <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col h-full">
-            
+        <div className="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col h-full">
+            {/* Top Section */}
             <div 
                 className="flex items-center gap-3 mb-4 cursor-pointer group"
                 onClick={() => router.push(`/service/${service._id}`)}
@@ -63,6 +62,7 @@ function MyServiceViewOnly({ service }: ServiceProps) {
                 </div>
             </div>
 
+            {/* Tags Section */}
             {service.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                     {service.tags.map((tag, index) => (
@@ -77,65 +77,131 @@ function MyServiceViewOnly({ service }: ServiceProps) {
                 </div>
             )}
 
-            <div className="mt-auto pt-4 flex justify-between items-center border-t border-gray-100">
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">Status:</span>
-                    <Badge 
-                        variant={
-                            applicationStatus === "accepted" ? "default" : 
-                            applicationStatus === "pending" ? "secondary" : 
-                            applicationStatus === "rejected" ? "destructive" : 
-                            applicationStatus === "completed" ? "outline" : "outline"
-                        }
-                        className="capitalize px-2 py-1"
-                    >
-                        {applicationStatus}
-                    </Badge>
-                    {statusUpdatedDate && (
-                        <span className="text-xs text-gray-400 ml-2">
-                            {formatDates(statusUpdatedDate)}
-                        </span>
+            {/* Desktop Footer - Original Layout */}
+            <div className="hidden md:block mt-auto pt-4 border-t border-gray-100">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">Status:</span>
+                        <Badge 
+                            variant={
+                                applicationStatus === "accepted" ? "default" : 
+                                applicationStatus === "pending" ? "secondary" : 
+                                applicationStatus === "rejected" ? "destructive" : 
+                                applicationStatus === "completed" ? "outline" : "outline"
+                            }
+                            className="capitalize px-2 py-1"
+                        >
+                            {applicationStatus}
+                        </Badge>
+                        {statusUpdatedDate && (
+                            <span className="text-xs text-gray-400 ml-2">
+                                {formatDates(statusUpdatedDate)}
+                            </span>
+                        )}
+                    </div>
+
+                    {applicationStatus === "accepted" && (
+                        <div className="flex gap-2">
+                            <ChatButton 
+                                userId={service.provider._id.toString()}
+                                serviceId={service._id.toString()}
+                                variant="outline"
+                                size="sm"
+                                openInNewTab={true}
+                            />
+                            <Button 
+                                onClick={handleCompleteService}
+                                size="sm"
+                                className="bg-[#7263f3] hover:bg-[#5e52d6] text-white shadow-sm"
+                            >
+                                Mark Complete
+                            </Button>
+                        </div>
+                    )}
+
+                    {applicationStatus === "completed" && !hasRated && (
+                        <Button 
+                            onClick={handleRateService}
+                            size="sm"
+                            variant="outline"
+                            className="border-[#7263f3] text-[#7263f3] hover:bg-[#7263f3]/10 transition-colors shadow-sm"
+                        >
+                            Rate Service
+                        </Button>
+                    )}
+
+                    {applicationStatus === "completed" && hasRated && (
+                        <Badge variant="outline" className="text-green-600 border-green-200">
+                            Rated
+                        </Badge>
                     )}
                 </div>
+            </div>
 
-                {applicationStatus === "accepted" && (
-                    <>
-                    <div className="flex gap-1"> 
-                        <ChatButton 
-                            userId={service.provider._id.toString()}
-                            serviceId={service._id.toString()}
-                            variant="outline"
-                            size="sm"
-                            className="mr-0"
-                            openInNewTab={true}
-                        />
-                        <Button 
-                            onClick={handleCompleteService}
-                            size="sm"
-                            className="bg-[#7263f3] hover:bg-[#5e52d6] text-white shadow-sm"
-                        >
-                            Mark Complete
-                        </Button>
+            {/* Mobile Footer - Optimized Layout */}
+            <div className="md:hidden mt-auto pt-4 border-t border-gray-100">
+                <div className="flex flex-col gap-3">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-500">Status:</span>
+                            <Badge 
+                                variant={
+                                    applicationStatus === "accepted" ? "default" : 
+                                    applicationStatus === "pending" ? "secondary" : 
+                                    applicationStatus === "rejected" ? "destructive" : 
+                                    applicationStatus === "completed" ? "outline" : "outline"
+                                }
+                                className="capitalize px-2 py-1 text-xs"
+                            >
+                                {applicationStatus}
+                            </Badge>
+                        </div>
+                        {statusUpdatedDate && (
+                            <span className="text-xs text-gray-400">
+                                {formatDates(statusUpdatedDate)}
+                            </span>
+                        )}
                     </div>
-                    </>
-                )}
 
-                {applicationStatus === "completed" && !hasRated && (
-                    <Button 
-                        onClick={handleRateService}
-                        size="sm"
-                        variant="outline"
-                        className="border-[#7263f3] text-[#7263f3] hover:bg-[#7263f3]/10 transition-colors shadow-sm"
-                    >
-                        Rate Service
-                    </Button>
-                )}
+                    {applicationStatus === "accepted" && (
+                        <div className="grid grid-cols-2 gap-2">
+                            <ChatButton 
+                                userId={service.provider._id.toString()}
+                                serviceId={service._id.toString()}
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                                openInNewTab={true}
+                            />
+                            <Button 
+                                onClick={handleCompleteService}
+                                size="sm"
+                                className="w-full bg-[#7263f3] hover:bg-[#5e52d6] text-white shadow-sm"
+                            >
+                                Complete
+                            </Button>
+                        </div>
+                    )}
 
-                {applicationStatus === "completed" && hasRated && (
-                    <Badge variant="outline" className="text-green-600 border-green-200">
-                        Rated
-                    </Badge>
-                )}
+                    {applicationStatus === "completed" && !hasRated && (
+                        <Button 
+                            onClick={handleRateService}
+                            size="sm"
+                            variant="outline"
+                            className="w-full border-[#7263f3] text-[#7263f3] hover:bg-[#7263f3]/10 transition-colors shadow-sm"
+                        >
+                            Rate Service
+                        </Button>
+                    )}
+
+                    {applicationStatus === "completed" && hasRated && (
+                        <div className="flex justify-end">
+                            <Badge variant="outline" className="text-green-600 border-green-200">
+                                Rated
+                            </Badge>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )
