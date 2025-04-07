@@ -27,17 +27,17 @@ function CreateServicePage() {
       <div className="flex flex-col min-h-screen">
         <Header />
         
-        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-          <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-            <UserX className="h-16 w-16 mx-auto text-yellow-500 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 text-center">
+          <div className="w-full max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+            <UserX className="h-12 w-12 md:h-16 md:w-16 mx-auto text-yellow-500 mb-4" />
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
               Student Verification Required
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-sm md:text-base text-gray-600 mb-6">
               This platform is exclusively for verified students of The Ship Campus, PCG. <br/>
               Please verify your student status to create service posts and access all features.
             </p>
-            <div className="flex gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button 
                 variant="default" 
                 onClick={() => router.push('/verify-student')}
@@ -49,6 +49,7 @@ function CreateServicePage() {
               <Button 
                 variant="outline" 
                 onClick={() => router.push('/')}
+                className="mt-0 sm:mt-0"
               >
                 Return Home
               </Button>
@@ -65,12 +66,12 @@ function CreateServicePage() {
     <div className="flex flex-col min-h-screen">
       <Header/>
 
-      <div className="flex-1 mb-10 mx-auto w-[90%] flex flex-col">
-        <h2 className="flex-1 pt-8 mx-auto w-[90%] text-3xl font-bold text-black">
+      <div className="flex-1 mb-10 mx-auto w-full md:w-[90%] flex flex-col px-4 md:px-0">
+        <h2 className="pt-6 md:pt-8 mx-auto w-full md:w-[90%] text-2xl md:text-3xl font-bold text-black">
           Create a Service Post
         </h2>
 
-        <div className="flex-1 pt-8 w-[90%] mx-auto flex justify-center items-center">
+        <div className="pt-6 md:pt-8 w-full md:w-[90%] mx-auto flex justify-center items-center">
           {userProfile?.isVerified ? (
             <ServiceForm/>
           ) : null}

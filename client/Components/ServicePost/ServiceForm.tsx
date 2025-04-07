@@ -95,41 +95,55 @@ function ServiceForm() {
     }
 
     return (
-        <div className="w-full flex gap-6">
-            <div className="self-start w-[10rem] bg-white rounded-md shadow-sm overflow-hidden">
+        <div className="w-full flex flex-col lg:flex-row gap-6">
+            {/* Stages sidebar - becomes horizontal on mobile */}
+            <div className="w-full lg:w-[15rem] bg-white rounded-md shadow-sm overflow-hidden flex lg:flex-col">
                 {sections.map((section, index) => (
-                    <button key={index} className={`pl-4 py-3 relative flex self-start gap-2 font-medium items-center
-                        ${
-                            currentSection === section? "text-[#7263f3]" : "text-gray-500"
-                        }`}
+                    <button 
+                        key={index} 
+                        className={`px-4 py-3 relative flex gap-2 font-medium items-center text-sm lg:text-base
+                            ${
+                                currentSection === section? "text-[#7263f3]" : "text-gray-500"
+                            }`}
                         onClick={()=>handleSectionChange(section)}
                     >
-                        <span className={`w-6 h-6 rounded-full flex items-center border border-gray-400/60 justify-center text-gray-500
+                        <span className={`w-6 h-6 rounded-full flex items-center border border-gray-400/60 justify-center 
                                 ${currentSection === section ? "text-white" : ""} ${getCompletedColor(section)}
                             `}>
                             {index +1}
                         </span>
-                        {section}
+                        <span className="hidden sm:inline">{section}</span>
                         {currentSection === section && (
-                            <span className="w-1 h-full absolute left-0 top-0 bg-[#7263f3] rounded-full"></span>
+                            <span className="hidden lg:block w-1 h-full absolute left-0 top-0 bg-[#7263f3] rounded-full"></span>
                         )}
                     </button>
                 ))}
             </div>
 
-            <form action="" className="p-6 flex-1 bg-white rounded-lg self-start" onSubmit={handleSubmit}>
+            <form className="p-4 md:p-6 flex-1 bg-white rounded-lg" onSubmit={handleSubmit}>
                 {renderStages()}
 
-                <div className="flex justify-end gap-4 mt-4">
+                <div className="flex justify-end gap-4 mt-6">
                     {currentSection !== "Summary" && 
-                    (<button type="button" className="px-6 py-2 bg-[#7263f3] text-white rounded-md"
-                    onClick={() =>{
-                        const currentIndex = sections.indexOf(currentSection);
-                        setCurrentSection(sections[currentIndex +1]);
-                    }}>Next </button>)}
+                    (<button 
+                        type="button" 
+                        className="px-4 py-2 md:px-6 md:py-2 bg-[#7263f3] text-white rounded-md text-sm md:text-base"
+                        onClick={() =>{
+                            const currentIndex = sections.indexOf(currentSection);
+                            setCurrentSection(sections[currentIndex +1]);
+                        }}
+                    >
+                        Next
+                    </button>)}
                 
                     {currentSection === "Summary" && 
-                    (<button type="submit" className="self-end px-6 py-2 bg-[#7263f3] text-white rounded-md" disabled={!agreeToTnC}>Post Service</button>)}
+                    (<button 
+                        type="submit" 
+                        className="px-4 py-2 md:px-6 md:py-2 bg-[#7263f3] text-white rounded-md text-sm md:text-base" 
+                        disabled={!agreeToTnC}
+                    >
+                        Post Service
+                    </button>)}
                 </div>
             </form>
         </div>
