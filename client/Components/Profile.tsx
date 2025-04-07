@@ -15,7 +15,12 @@ import { useGlobalContext } from '@/context/globalContext'
 import Image from 'next/image'
 import { toast } from 'react-hot-toast'
 
-function Profile() {
+interface ProfileProps {
+    mobile?: boolean;
+}
+
+function Profile({ mobile = false }: ProfileProps) {
+
     const { userProfile, setUserProfile } = useGlobalContext();
     const { profilePicture, name, email, isVerified } = userProfile;
     const router = useRouter();
@@ -43,35 +48,38 @@ function Profile() {
 
     return (
         <DropdownMenu>
-            <div className="flex items-center gap-4">
-                <Button 
-                    variant={isVerified ? "default" : "outline"} 
-                    size="sm"
-                    onClick={handleVerificationClick}
-                    className={`flex items-center gap-2 ${
-                        isVerified 
-                            ? "bg-[#7263f3] hover:bg-[#5a4bd1] text-white" 
-                            : "hover:bg-gray-100"
-                    }`}
-                    disabled={isVerifying}
-                >
-                    {isVerifying ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : isVerified ? (
-                        <>
-                            <BadgeCheck className="h-4 w-4" />
-                            <span>Verified</span>
-                        </>
-                    ) : (
-                        <>
-                            <UserX className="h-4 w-4" />
-                            <span>Not Verified</span>
-                        </>
-                    )}
-                </Button>
+            <div className={`flex items-center gap-4 ${mobile ? 'gap-2' : ''}`}>
+                {!mobile && (
+                    <Button 
+                        variant={isVerified ? "default" : "outline"} 
+                        size="sm"
+                        onClick={handleVerificationClick}
+                        className={`flex items-center gap-2 ${
+                            isVerified 
+                                ? "bg-[#7263f3] hover:bg-[#5a4bd1] text-white" 
+                                : "hover:bg-gray-100"
+                        }`}
+                        disabled={isVerifying}
+                    >
+                        {isVerifying ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : isVerified ? (
+                            <>
+                                <BadgeCheck className="h-4 w-4" />
+                                <span>Verified</span>
+                            </>
+                        ) : (
+                            <>
+                                <UserX className="h-4 w-4" />
+                                <span>Not Verified</span>
+                            </>
+                        )}
+                    </Button>
+                )}
+                
                 
                 <DropdownMenuTrigger asChild className="cursor-pointer">
-                    <div className="relative w-9 h-9 rounded-md overflow-hidden">
+                    <div className={`relative ${mobile ? 'w-8 h-8' : 'w-9 h-9'} rounded-md overflow-hidden`}>
                         <Image
                             src={profilePicture || "/avatar.png"}
                             alt="avatar"
@@ -131,6 +139,7 @@ function Profile() {
                     <span>Logout</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
+
         </DropdownMenu>
     )
 }

@@ -8,7 +8,11 @@ import { ChatList } from "./ChatList";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 
-export const ChatDropdown = () => {
+interface ChatDropdownProps {
+  mobile?: boolean;
+}
+
+export const ChatDropdown = ({ mobile = false }: ChatDropdownProps) => {
   const { isAuthenticated } = useGlobalContext();
   const { 
     totalUnread, 
@@ -32,12 +36,12 @@ export const ChatDropdown = () => {
       <PopoverTrigger asChild>
         <Button 
           variant="ghost" 
-          size="icon" 
-          className="relative rounded-full"
+          size={mobile ? "sm" : "icon"} 
+          className={`relative ${mobile ? "rounded-md" : "rounded-full"}`}
         >
-          <MessageSquare className="h-5 w-5" />
+          <MessageSquare className={`${mobile ? "h-4 w-4" : "h-5 w-5"}`} />
           {totalUnread > 0 && (
-            <span className="absolute -top-1 -right-1 bg-[#7263f3] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <span className={`absolute ${mobile ? "-top-0.5 -right-0.5 h-4 w-4 text-[10px]" : "-top-1 -right-1 h-5 w-5 text-xs"} bg-[#7263f3] text-white rounded-full flex items-center justify-center`}>
               {totalUnread > 9 ? '9+' : totalUnread}
             </span>
           )}
