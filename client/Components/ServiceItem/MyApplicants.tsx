@@ -109,61 +109,59 @@ const MyApplicants = () => {
   }
 
   return (
-    <div className="space-y-4 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
       {applicants.map((applicant) => (
         <div 
           key={applicant._id} 
           className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white"
         >
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            {/* Applicant Info */}
-            <div className="flex flex-1 gap-4 items-center w-full">
-              <div className="flex-shrink-0">
-                {applicant.user.profilePicture ? (
-                  <Image
-                    src={applicant.user.profilePicture}
-                    alt={applicant.user.name}
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                    {applicant.user.name.charAt(0)}
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg">{applicant.user.name}</h3>
-                <p className="text-gray-600 text-sm">{applicant.user.email}</p>
-                <p className="text-sm mt-1">
-                  Applied for: <span className="font-medium text-[#7263f3]">{applicant.serviceTitle}</span>
-                </p>
-                <Badge variant="outline" className="mt-2 text-xs">
-                  Applied: {formatDates(applicant.updatedAt)}
-                </Badge>
-              </div>
+          <div className="flex gap-4 items-center">
+            <div className="flex-shrink-0">
+              {applicant.user.profilePicture ? (
+                <Image
+                  src={applicant.user.profilePicture}
+                  alt={applicant.user.name}
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                  {applicant.user.name.charAt(0)}
+                </div>
+              )}
             </div>
+            <div>
+              <h3 className="font-semibold text-lg">{applicant.user.name}</h3>
+              <p className="text-gray-600 text-sm">{applicant.user.email}</p>
+            </div>
+          </div>
 
-            {/* Action Buttons - Updated layout */}
-            <div className="flex justify-end md:items-center gap-2">
-              <Button
-                onClick={() => handleStatusChange(applicant._id, "accepted")}
-                size="sm"
-                className="bg-[#7263f3] hover:bg-[#5a4bd1] text-white shadow-sm transition-colors"
-              >
-                Accept
-              </Button>
-              <Button
-                onClick={() => handleStatusChange(applicant._id, "rejected")}
-                size="sm"
-                variant="outline"
-                className="border-[#F44336] text-[#F44336] hover:bg-[#F44336]/10 transition-colors shadow-sm"
-              >
-                Reject
-              </Button>
-            </div>
+          <div className="mt-4">
+            <p className="text-sm">
+              Applied for: <span className="font-medium text-[#7263f3]">{applicant.serviceTitle}</span>
+            </p>
+            <Badge variant="outline" className="mt-2 text-xs">
+              Applied: {formatDates(applicant.createdAt)}
+            </Badge>
+          </div>
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              onClick={() => handleStatusChange(applicant._id, "accepted")}
+              size="sm"
+              className="bg-[#7263f3] hover:bg-[#5a4bd1] text-white shadow-sm transition-colors"
+            >
+              Accept
+            </Button>
+            <Button
+              onClick={() => handleStatusChange(applicant._id, "rejected")}
+              size="sm"
+              variant="outline"
+              className="border-[#F44336] text-[#F44336] hover:bg-[#F44336]/10 transition-colors shadow-sm"
+            >
+              Reject
+            </Button>
           </div>
         </div>
       ))}
