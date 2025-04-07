@@ -10,12 +10,6 @@ import { ArrowLeft, Send, Loader2, MessageSquare } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/Components/ui/avatar";
 import { Message, UserReference } from "@/types/types";
 
-interface ChatWindowProps {
-    userId: string;
-    showBackButton?: boolean;
-    onBack?: () => void;
-}
-
 export const ChatWindow = ({ 
     userId, 
     showBackButton = false,
@@ -34,8 +28,6 @@ export const ChatWindow = ({
     const [recipientInfo, setRecipientInfo] = useState<UserReference | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
-    const [lastReadMessageId, setLastReadMessageId] = useState<string | null>(null);
 
     const {
         messages,
@@ -109,18 +101,24 @@ export const ChatWindow = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!message.trim() || isSending) return;
-
+    
         setIsSending(true);
         try {
             await sendMessage(userId, message, serviceId || undefined);
             setMessage("");
             messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 0);
         } catch (error) {
             console.error("Failed to send message:", error);
         } finally {
             setIsSending(false);
         }
     };
+    
+    
 
     if (isLoading) {
         return (
