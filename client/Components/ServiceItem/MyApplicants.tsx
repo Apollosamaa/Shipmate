@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { useChatContext } from "@/context/chatContext"
+import { useChatContext } from "@/context/chatContext";
+import { Button } from "@/Components/ui/button";
+import { Badge } from "@/Components/ui/badge";
+import { formatDates } from "@/utils/formatDates";
+import Image from "next/image";
 
 interface Applicant {
   _id: string;
@@ -15,6 +19,7 @@ interface Applicant {
   serviceId: string;
   serviceTitle: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 const MyApplicants = () => {
@@ -60,7 +65,6 @@ const MyApplicants = () => {
         { id: toastId }
       );
 
-      // Send message if accepted
       if (newStatus === "accepted") {
         try {
           const messageContent = `Hello ${applicant.user.name},\n\nI have accepted your application for "${applicant.serviceTitle}". Thank you for your interest! How may I assist you further?\n\nBest regards`;
@@ -71,7 +75,6 @@ const MyApplicants = () => {
           );
         } catch (messageError) {
           console.error("Failed to send acceptance message:", messageError);
-          // You might want to notify the provider that the message failed
           toast.error("Application accepted but failed to send notification", {
             id: "message-error"
           });
@@ -107,46 +110,59 @@ const MyApplicants = () => {
 
   return (
     <div className="space-y-4 mt-6">
-      
       {applicants.map((applicant) => (
-        <div key={applicant._id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0">
-              {applicant.user.profilePicture ? (
-                <img 
-                  src={applicant.user.profilePicture} 
-                  alt={applicant.user.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                  {applicant.user.name.charAt(0)}
-                </div>
-              )}
+        <div 
+          key={applicant._id} 
+          className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white"
+        >
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            {/* Applicant Info */}
+            <div className="flex flex-1 gap-4 items-center w-full">
+              <div className="flex-shrink-0">
+                {applicant.user.profilePicture ? (
+                  <Image
+                    src={applicant.user.profilePicture}
+                    alt={applicant.user.name}
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    {applicant.user.name.charAt(0)}
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg">{applicant.user.name}</h3>
+                <p className="text-gray-600 text-sm">{applicant.user.email}</p>
+                <p className="text-sm mt-1">
+                  Applied for: <span className="font-medium text-[#7263f3]">{applicant.serviceTitle}</span>
+                </p>
+                <Badge variant="outline" className="mt-2 text-xs">
+                  Applied: {formatDates(applicant.updatedAt)}
+                </Badge>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg">{applicant.user.name}</h3>
-              <p className="text-gray-600">{applicant.user.email}</p>
-              <p className="text-sm mt-1">
-                Applied for: <span className="font-medium">{applicant.serviceTitle}</span>
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Applied on: {new Date(applicant.createdAt).toLocaleDateString()}
-              </p>
-            </div>
-            <div className="flex gap-2 my-auto">
-              <button
+
+            {/* Action Buttons - Updated layout */}
+            <div className="flex justify-end md:items-center gap-2">
+              <Button
                 onClick={() => handleStatusChange(applicant._id, "accepted")}
-                className="px-4 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                size="sm"
+                className="bg-[#7263f3] hover:bg-[#5a4bd1] text-white shadow-sm transition-colors"
               >
                 Accept
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => handleStatusChange(applicant._id, "rejected")}
-                className="px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                size="sm"
+                variant="outline"
+                className="border-[#F44336] text-[#F44336] hover:bg-[#F44336]/10 transition-colors shadow-sm"
               >
                 Reject
-              </button>
+              </Button>
             </div>
           </div>
         </div>
