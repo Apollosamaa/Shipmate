@@ -1,3 +1,4 @@
+// app/chat/[userId]/page.tsx - Updated version
 "use client";
 import { ChatWindow } from "@/Components/Chat/ChatWindow";
 import { ChatList } from "@/Components/Chat/ChatList";
@@ -9,10 +10,18 @@ import { MessageSquare } from "lucide-react";
 export default function ChatPage() {
   const { userProfile } = useGlobalContext();
   const router = useRouter();
-  const params = useParams(); // Proper way to get params
+  const params = useParams();
   const [userId, setUserId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Handle params asynchronously
+  useEffect(() => {
+    // Check if mobile view
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     if (params?.userId) {
       setUserId(params.userId as string);
@@ -24,6 +33,21 @@ export default function ChatPage() {
     return null;
   }
 
+  if (isMobile) {
+    return userId ? (
+      <ChatWindow 
+        userId={userId} 
+        showBackButton={true}
+        onBack={() => router.push('/chat')}
+      />
+    ) : (
+      <div className="h-screen">
+        <ChatList compact={false} openInNewTab={false} />
+      </div>
+    );
+  }
+
+  // Desktop view remains unchanged
   return (
     <div className="flex h-screen">
       <div className="w-[30%] border-r">

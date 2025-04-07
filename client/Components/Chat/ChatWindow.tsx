@@ -10,7 +10,22 @@ import { ArrowLeft, Send, Loader2, MessageSquare } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/Components/ui/avatar";
 import { Message, UserReference } from "@/types/types";
 
-export const ChatWindow = ({ userId }: { userId: string }) => {
+interface ChatWindowProps {
+    userId: string;
+    showBackButton?: boolean;
+    onBack?: () => void;
+}
+
+export const ChatWindow = ({ 
+    userId, 
+    showBackButton = false,
+    onBack = () => {}
+  }: {
+    userId: string;
+    showBackButton?: boolean;
+    onBack?: () => void;
+  }) => {
+    const [isMobile, setIsMobile] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
     const [message, setMessage] = useState("");
@@ -19,6 +34,8 @@ export const ChatWindow = ({ userId }: { userId: string }) => {
     const [recipientInfo, setRecipientInfo] = useState<UserReference | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
+    const [lastReadMessageId, setLastReadMessageId] = useState<string | null>(null);
 
     const {
         messages,
@@ -152,14 +169,16 @@ export const ChatWindow = ({ userId }: { userId: string }) => {
         <div className="flex flex-col h-full">
             {/* Chat Header */}
             <div className="p-4 border-b flex items-center gap-4 bg-white sticky top-0 z-10">
+                {(showBackButton || isMobile) && (
                 <Button 
                     variant="ghost" 
                     size="icon" 
-                    onClick={() => router.back()}
+                    onClick={onBack}
                     className="rounded-full"
                 >
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
+                )}
 
                 <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">

@@ -7,15 +7,15 @@ interface UserReference {
 }
 
 interface Rating {
-    user: string | UserReference; // Can be just ID or populated user
+    user: string | UserReference; 
     rating: number;
     review?: string;
-    _id?: string; // For mongoose documents
+    _id?: string; 
     createdAt?: string;
 }
 
 interface Applicant {
-    user: string | UserReference; // Can be just ID or populated user
+    user: string | UserReference; 
     status: ApplicationStatus;
     _id: string;
     createdAt: string;
