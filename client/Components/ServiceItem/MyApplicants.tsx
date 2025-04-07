@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useChatContext } from "@/context/chatContext"
 
 interface Applicant {
   _id: string;
@@ -35,6 +36,8 @@ const MyApplicants = () => {
     fetchApplicants();
   }, []);
 
+  const { sendMessage } = useChatContext();
+
   const handleStatusChange = async (applicantId: string, newStatus: "accepted" | "rejected") => {
     const applicant = applicants.find(app => app._id === applicantId);
     
@@ -56,6 +59,24 @@ const MyApplicants = () => {
         `${applicant.user.name} ${newStatus} successfully!`,
         { id: toastId }
       );
+
+      // Send message if accepted
+      if (newStatus === "accepted") {
+        try {
+          const messageContent = `Hello ${applicant.user.name},\n\nI have accepted your application for "${applicant.serviceTitle}". Thank you for your interest! How may I assist you further?\n\nBest regards`;
+          await sendMessage(
+            applicant.user._id, 
+            messageContent,
+            applicant.serviceId
+          );
+        } catch (messageError) {
+          console.error("Failed to send acceptance message:", messageError);
+          // You might want to notify the provider that the message failed
+          toast.error("Application accepted but failed to send notification", {
+            id: "message-error"
+          });
+        }
+      }
     } catch (error) {
       console.error("Failed to update status:", error);
       toast.error(
