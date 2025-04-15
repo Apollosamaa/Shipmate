@@ -33,7 +33,7 @@ function page() {
 
   const handleApply = async () => {
     if (!isAuthenticated) {
-      router.push("/login");
+      router.push("http://localhost:8000/login");
       return;
     }
   
