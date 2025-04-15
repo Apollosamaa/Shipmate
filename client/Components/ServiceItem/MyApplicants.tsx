@@ -6,6 +6,7 @@ import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import { formatDates } from "@/utils/formatDates";
 import Image from "next/image";
+import { useGlobalContext } from "@/context/globalContext";
 
 interface Applicant {
   _id: string;
@@ -25,12 +26,15 @@ interface Applicant {
 const MyApplicants = () => {
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [loading, setLoading] = useState(true);
+  const { setHasApplicants } = useGlobalContext(); 
 
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
         const response = await axios.get("/api/v1/my-services/applicants");
         setApplicants(response.data);
+        // Update global state with applicant status
+        setHasApplicants(response.data.length > 0);
       } catch (error) {
         console.error("Failed to fetch applicants:", error);
         toast.error("Failed to load applicants");
@@ -39,7 +43,7 @@ const MyApplicants = () => {
       }
     };
     fetchApplicants();
-  }, []);
+  }, [setHasApplicants]);
 
   const { sendMessage } = useChatContext();
 
@@ -59,7 +63,12 @@ const MyApplicants = () => {
         { status: newStatus }
       );
       
-      setApplicants(applicants.filter(app => app._id !== applicantId));
+      const updatedApplicants = applicants.filter(app => app._id !== applicantId);
+      setApplicants(updatedApplicants);
+      
+      // Update global state with new applicant status
+      setHasApplicants(updatedApplicants.length > 0);
+      
       toast.success(
         `${applicant.user.name} ${newStatus} successfully!`,
         { id: toastId }

@@ -5,6 +5,6 @@ import protect from '../middleware/protect.js';
 const router = express.Router();
 
 router.post('/verify', protect, verifyStudent);
-router.get('/verify/status', protect, checkVerificationStatus); // New endpoint
+router.get('/verify/status', protect, checkVerificationStatus);
 
 export default router;

@@ -14,7 +14,7 @@ const messageSchema = new mongoose.Schema({
     service: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Service" 
-    }, // Optional link to service
+    }, 
     content: {
         type: String,
         required: true,

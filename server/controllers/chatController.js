@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import { Message } from "../models/MessageModel.js";
 import User from "../models/UserModel.js";
 
-// @desc    Send a message
+// Send a message
 export const sendMessage = asyncHandler(async (req, res) => {
     const { receiverId, content, serviceId } = req.body;
     const senderId = req.user._id; // From auth middleware
@@ -24,7 +24,7 @@ export const sendMessage = asyncHandler(async (req, res) => {
     res.status(201).json(message);
 });
 
-// @desc    Get conversation between two users
+// Get conversation between two users
 export const getConversation = asyncHandler(async (req, res) => {
     const { userId } = req.params;
     const currentUserId = req.user._id;
@@ -42,7 +42,7 @@ export const getConversation = asyncHandler(async (req, res) => {
     res.status(200).json(messages);
 });
 
-// @desc    Get all user's conversations
+// Get all user's conversations
 export const getConversations = asyncHandler(async (req, res) => {
     console.log("GET /conversations called"); // Debug log
     const userId = req.user._id;
@@ -95,7 +95,7 @@ export const getConversations = asyncHandler(async (req, res) => {
     res.status(200).json(conversations);
 });
 
-// @desc    Mark messages as read
+// Mark messages as read
 export const markMessagesAsRead = asyncHandler(async (req, res) => {
     const { senderId } = req.body;
     const receiverId = req.user._id;

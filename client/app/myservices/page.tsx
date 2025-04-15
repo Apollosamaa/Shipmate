@@ -11,10 +11,11 @@ import { Service } from "@/types/types";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/Components/ui/select";
+import axios from "axios";
 
 function page() {
   const { userServices, services } = useServicesContext();
-  const { isAuthenticated, loading, userProfile } = useGlobalContext();
+  const { isAuthenticated, loading, userProfile, hasApplicants } = useGlobalContext();
 
   const [activeTab, setActiveTab] = useState("posts");
   const [selectedMobileTab, setSelectedMobileTab] = useState("posts");
@@ -27,7 +28,7 @@ function page() {
     if (!loading && !isAuthenticated) {
       router.push("http://localhost:8000/login");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loading, router]);
 
   // Requested Services (services where the user has applied)
   const requestServices = services.filter((service: Service) =>
@@ -66,13 +67,13 @@ function page() {
         <div className="hidden md:flex self-center items-center gap-2 md:gap-6 mb-6">
           {[
             { id: "posts", label: "My Service Posts" },
-            { id: "applicants", label: "My Applicants" },
+            { id: "applicants", label: "My Applicants", hasNotification: hasApplicants },
             { id: "request", label: "Requested Services" },
             { id: "saved", label: "Saved Services" }
           ].map((tab) => (
             <button
               key={tab.id}
-              className={`px-4 py-2 md:px-8 md:py-2 rounded-full font-medium text-sm md:text-base transition-colors ${
+              className={`px-4 py-2 md:px-8 md:py-2 rounded-full font-medium text-sm md:text-base transition-colors relative ${
                 activeTab === tab.id
                   ? "bg-[#7263f3] text-white shadow-md"
                   : "border border-gray-300 hover:bg-gray-100"
@@ -80,6 +81,9 @@ function page() {
               onClick={() => handleTabChange(tab.id)}
             >
               {tab.label}
+              {tab.hasNotification && (
+                <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500"></span>
+              )}
             </button>
           ))}
         </div>
@@ -88,11 +92,23 @@ function page() {
         <div className="md:hidden mb-6 w-full">
           <Select value={selectedMobileTab} onValueChange={handleTabChange}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select view" />
+              <div className="flex items-center justify-between w-full">
+                <SelectValue placeholder="Select view" />
+                {hasApplicants && selectedMobileTab !== "applicants" && (
+                  <span className="h-2 w-2 rounded-full bg-red-500 ml-2 flex-shrink-0"></span>
+                )}
+              </div>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="posts">My Service Posts</SelectItem>
-              <SelectItem value="applicants">My Applicants</SelectItem>
+              <SelectItem value="applicants">
+                <div className="flex items-center justify-between w-full">
+                  My Applicants
+                  {hasApplicants && (
+                    <span className="h-2 w-2 rounded-full bg-red-500 ml-2"></span>
+                  )}
+                </div>
+              </SelectItem>
               <SelectItem value="request">Requested Services</SelectItem>
               <SelectItem value="saved">Saved Services</SelectItem>
             </SelectContent>

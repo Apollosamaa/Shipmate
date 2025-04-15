@@ -22,7 +22,7 @@ export const GlobalContextProvider = ({children}) => {
     const [price, setPrice] = useState(0);
     const [negotiable, setNegotiable] = useState(false);
     const [tags, setTags] = useState([]);
-
+    const [hasApplicants, setHasApplicants] = useState(false);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -31,6 +31,17 @@ export const GlobalContextProvider = ({children}) => {
                 const res = await axios.get("/api/v1/check-auth");
                 setIsAuthenticated(res.data.isAuthenticated);
                 setAuth0User(res.data.user);
+                
+                // If authenticated, immediately check for applicants
+                if (res.data.isAuthenticated) {
+                    try {
+                        const applicantsRes = await axios.get("/api/v1/my-services/applicants");
+                        setHasApplicants(applicantsRes.data.length > 0);
+                    } catch (applicantsError) {
+                        console.error("Error checking applicants", applicantsError);
+                    }
+                }
+                
                 setLoading(false);
             } catch (error) {
                 console.log("Error checking auth", error);
@@ -39,8 +50,6 @@ export const GlobalContextProvider = ({children}) => {
             }
         }
         checkAuth();
-
-        
     }, []);
 
     const getUserProfile = async (id) => {
@@ -94,6 +103,8 @@ export const GlobalContextProvider = ({children}) => {
             setNegotiable,
             setActiveServiceCategory,
             setTags,
+            hasApplicants,
+            setHasApplicants,
         }}>
             { children }
         </GlobalContext.Provider>

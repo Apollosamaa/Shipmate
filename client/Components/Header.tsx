@@ -2,21 +2,36 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGlobalContext } from '@/context/globalContext'
 import { LogIn, UserPlus, Menu, X } from 'lucide-react'
 import Profile from './Profile'
 import { MessageSquare } from "lucide-react";
 import { ChatDropdown } from './Chat/ChatDropDown'
+import axios from 'axios'
 
 function Header() {
-    const {isAuthenticated, user} = useGlobalContext();
+    const {isAuthenticated, hasApplicants, setHasApplicants} = useGlobalContext();
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            const checkApplicants = async () => {
+                try {
+                    const response = await axios.get("/api/v1/my-services/applicants");
+                    setHasApplicants(response.data.length > 0);
+                } catch (error) {
+                    console.error("Failed to check applicants:", error);
+                }
+            };
+            checkApplicants();
+        }
+    }, [isAuthenticated, setHasApplicants]);
 
     return (
         <header className="px-4 py-4 md:px-10 md:py-6 bg-[#D7DeDC] text-gray-500 flex justify-between items-center relative">
@@ -27,7 +42,7 @@ function Header() {
                 </Link>
 
                 {/* Mobile menu button */}
-                <div className="flex items-center gap-4 md:hidden">
+                <div className="flex items-center gap-4 md:hidden relative">
                     {isAuthenticated && (
                         <>
                             <ChatDropdown mobile />
@@ -35,10 +50,13 @@ function Header() {
                         </>
                     )}
                     <button 
-                        className="p-2 rounded-md text-gray-500 hover:bg-gray-200 focus:outline-none"
+                        className="p-2 rounded-md text-gray-500 hover:bg-gray-200 focus:outline-none relative"
                         onClick={toggleMenu}
                     >
                         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        {hasApplicants && !isMenuOpen && (
+                            <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500"></span>
+                        )}
                     </button>
                 </div>
             </div>
@@ -57,7 +75,7 @@ function Header() {
                                 Find Service 
                         </Link>
                     </li>
-                    <li>
+                    <li className="relative">
                         <Link 
                             href="/myservices" 
                             className={`py-2 px-4 lg:px-6 rounded-md text-sm lg:text-base ${
@@ -66,6 +84,9 @@ function Header() {
                                     : "hover:text-[#7263F3] hover:bg-[#7263F3]/10 transition-colors"
                                 }`}>
                                 My Services
+                                {hasApplicants && (
+                                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500"></span>
+                                )}
                         </Link>
                     </li>
                     <li>
@@ -121,7 +142,7 @@ function Header() {
                                     Find Service 
                             </Link>
                         </li>
-                        <li>
+                        <li className="relative">
                             <Link 
                                 href="/myservices" 
                                 className={`block py-2 px-4 rounded-md ${
@@ -131,6 +152,9 @@ function Header() {
                                     }`}
                                 onClick={toggleMenu}>
                                     My Services
+                                    {hasApplicants && (
+                                        <span className="absolute top-2.5 right-4 h-2 w-2 rounded-full bg-red-500"></span>
+                                    )}
                             </Link>
                         </li>
                         <li>
